@@ -78,19 +78,19 @@ export const constantRoutes = [
         path: 'seekerRecom',
         name: 'SeekerRecom',
         component: () => import('@/views/recommend/seekerRecom'),
-        meta: { title: '职位推荐', icon: 'table' }
+        meta: { title: '职位推荐', icon: 'deploymentunit' }
       },
       {
         path: 'hRecom',
         name: 'HRecom',
         component: () => import('@/views/recommend/hRecom'),
-        meta: { title: '人才推荐', icon: 'table' }
+        meta: { title: '人才推荐', icon: 'reconciliation' }
       },
       {
         path: 'seekerEval',
         name: 'SeekerEval',
         component: () => import('@/views/recommend/seekerEval'),
-        meta: { title: '能力评估', icon: 'tree' }
+        meta: { title: '能力评估', icon: 'contacts' }
       }
     ]
   },
@@ -100,25 +100,25 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/jobInfo/jobInfo',
     name: 'JobInfo',
-    meta: { title: '职位信息', icon: 'el-icon-s-help' },
+    meta: { title: '职位信息', icon: 'info-circle' },
     children: [
       {
         path: 'jobInfo',
         name: 'JobInfo',
         component: () => import('@/views/jobInfo/jobInfo'),
-        meta: { title: '职位信息', icon: 'table' }
+        meta: { title: '职位信息', icon: 'info-circle-fill' }
       },
       {
         path: 'jobAdd',
         name: 'JobAdd',
         component: () => import('@/views/jobInfo/jobAdd'),
-        meta: { title: '添加职位', icon: 'table' }
+        meta: { title: '添加职位', icon: 'addteam' }
       },
       {
         path: 'employGuide',
         name: 'EmployGuide',
         component: () => import('@/views/jobInfo/employGuide'),
-        meta: { title: '招聘指南', icon: 'tree' }
+        meta: { title: '招聘指南', icon: 'guide' }
       }
     ]
   },
