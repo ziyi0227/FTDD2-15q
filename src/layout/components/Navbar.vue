@@ -11,9 +11,14 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/userHome">
+          <router-link to="/seekerInfo">
             <el-dropdown-item>
               个人主页
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/hrInfo">
+            <el-dropdown-item>
+              企业主页
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/ftdd2">
