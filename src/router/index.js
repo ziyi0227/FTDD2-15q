@@ -38,6 +38,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/setup',
+    component: () => import('@/views/setup/index'),
+    hidden: true
+  },
+
+  {
     path: '/seekerInfo',
     component: () => import('@/views/userInfo/seeker'),
     hidden: true
