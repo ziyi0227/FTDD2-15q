@@ -2,6 +2,8 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
+
+import { ref } from 'vue';
 const getDefaultState = () => {
   return {
     token: getToken(),
@@ -88,10 +90,11 @@ const actions = {
   }
 }
 
+// export default userInfoStore;
+
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 }
-
