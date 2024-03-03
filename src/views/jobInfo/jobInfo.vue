@@ -76,6 +76,16 @@
         </el-table-column>
       </el-table>
     </el-card>
+  <!--  分页组件-->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="searchmodel.pageNo"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="searchmodel.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
   </div>
 </template>
 
@@ -83,7 +93,11 @@
 export default {
   data() {
     return {
-      searchmodel: {},
+      total: 0,
+      searchmodel: {
+        pageNo: 1,
+        pageSize: 10
+      },
       jobList: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -93,6 +107,12 @@ export default {
         name: '王小虎',
         address: '上海市普陀区金沙江路 1517 弄'
       }]
+    }
+  },
+  methods: {
+    handleSizeChange() {
+    },
+    handleCurrentChange() {
     }
   }
 }
