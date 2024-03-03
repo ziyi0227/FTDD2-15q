@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="activeForm" :model="activeForm" :rules="activeRules" class="login-form" auto-complete="on"
+             label-position="left">
 
       <div class="title-container">
         <h3 class="title">欢迎使用才识雷达平台</h3>
@@ -8,11 +9,11 @@
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
+          <svg-icon icon-class="user"/>
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model="activeForm.username"
           placeholder="用户名"
           name="username"
           type="text"
@@ -21,37 +22,90 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+<!--      登录表单  -->
+
+      <el-form-item v-if="isLoginForm" prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
+          <svg-icon icon-class="password"/>
         </span>
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.password"
+          v-model="activeForm.password"
           :type="passwordType"
           placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="handleLoginOrRegister"
         />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
+      <!-- 注册 -->
+      <el-form-item v-else prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password"/>
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="activeForm.password"
+          :type="passwordType"
+          placeholder="密码"
+          name="password"
+          tabindex="2"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        />
+      </el-form-item>
+        <div class="password-confirm-gap" v-if="!isLoginForm"></div>
+        <!-- 确认密码 -->
+        <el-form-item  v-if="!isLoginForm" prop="confirmPassword">
+          <span class="svg-container">
+            <svg-icon icon-class="password"/>
+          </span>
+          <el-input
+            v-model="activeForm.confirmPassword"
+            :type="passwordType"
+            placeholder="确认密码"
+            name="confirmPassword"
+            tabindex="3"
+            auto-complete="on"
+            @keyup.enter.native="handleLoginOrRegister"
+          />
+
+        </el-form-item>
+
+
+
+
+      <!-- 登录/注册按钮 -->
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+                 @click.native.prevent="handleLoginOrRegister">{{ activeButton }}
+      </el-button>
+
+      <!-- 切换按钮 -->
+      <el-button type="text" @click="toggleForm">
+        {{ isLoginForm ? '注册新账号' : '返回登录' }}
+      </el-button>
 
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {validUsername} from '@/utils/validate'
+import ElMessage from "autoprefixer/lib/utils";
+
+// 登录注册切换时，清空绑定模型中的数据
+
+
 
 export default {
-  name: 'Login',
+  name: 'LoginAndRegister',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -67,23 +121,37 @@ export default {
         callback()
       }
     }
+    const validateConfirmPassword = (rule, value, callback) => {
+      if (value !== this.activeForm.password) {
+        callback(new Error('两次输入的密码不一致'))
+      }else if(value===''){
+        callback(new Error('请再次确认密码'))
+      } else {
+        callback()
+      }
+    }
     return {
-      loginForm: {
-        username: 'admin',
-        password: '123456'
+
+      activeForm: {
+        username: '',
+        password: '',
+        confirmPassword: ''
       },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      activeRules: {
+        username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        password: [{required: true, trigger: 'blur', validator: validatePassword}],
+        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }]
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      activeButton: '登 录',
+      isLoginForm: true,
     }
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -100,16 +168,35 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+    toggleForm() {
+      this.clearData();
+      this.isLoginForm = !this.isLoginForm
+      this.activeButton = this.isLoginForm ? '登 录' : '注 册'
+      this.$nextTick(() => {
+        this.$refs.username.focus()
+      })
+    },
+    clearData(){
+      this.activeForm.username=''
+      this.activeForm.password=''
+      this.activeForm.confirmPassword=''
+    },
+     handleLoginOrRegister() {
+      this.$refs.activeForm.validate(async (valid) => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+          try {
+            if (this.isLoginForm) {
+              await this.$store.dispatch('user/login', this.activeForm)
+            } else {
+              await this.$store.dispatch('user/register', this.activeForm)
+            }
+            this.$router.push({path: this.redirect || '/'})
             this.loading = false
-          }).catch(() => {
+          } catch (err) {
+            ElMessage.error(err.message || '操作失败，请稍后重试')
             this.loading = false
-          })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -118,6 +205,9 @@ export default {
     }
   }
 }
+
+
+
 </script>
 
 <style lang="scss">
@@ -125,7 +215,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg: #fdfdfe;
-$light_gray:#fff;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -231,5 +321,9 @@ $light_gray: #6c9bbe;
     cursor: pointer;
     user-select: none;
   }
+  .password-confirm-gap {
+    margin-top: 16px; /* 根据需要调整合适的间距大小 */
+  }
 }
+
 </style>
