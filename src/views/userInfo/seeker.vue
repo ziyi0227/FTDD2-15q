@@ -1,71 +1,88 @@
 <template>
-  <div>
-    <el-card class="page-container">
-      <template #header>
-        <div class="header">
-          <span>求职者个人资料</span>
-        </div>
-      </template>
-      <el-row>
-        <el-col :span="12">
-          <el-form :model="userInfo" :rules="rules" label-width="100px" size="large">
-            <el-form-item label="用户名">
-              <el-input v-model="userInfo.username" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="用户年龄" prop="age">
-              <el-input v-model="userInfo.age"></el-input>
-            </el-form-item>
-            <el-form-item label="现居地址" prop="live_city">
-              <el-input v-model="userInfo.live_city"></el-input>
-            </el-form-item>
-            <el-form-item label="期望行业" prop="desire_industry">
-              <el-input v-model="userInfo.desire_industry"></el-input>
-            </el-form-item>
-            <el-form-item label="最近工作行业" prop="cur_industry">
-              <el-input v-model="userInfo.cur_industry"></el-input>
-            </el-form-item>
-            <el-form-item label="学历" prop="degree">
-              <el-input v-model="userInfo.degree"></el-input>
-            </el-form-item>
-            <el-form-item label="开始工作时间" prop="start_work_date">
-              <el-date-picker
-                v-model="userInfo.start_work_date"
-                type="date"
-                placeholder="选择日期"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="updateForm('userInfo')">提交修改</el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card class="customer-list">
-      <template #header>
-        <div class="header">
-          <span>收藏的招聘信息</span>
-        </div>
-      </template>
-      <el-table :data="pagedJobList" style="width: 100%">
-        <el-table-column prop="company" label="公司名"></el-table-column>
-        <el-table-column prop="title" label="职位名称"></el-table-column>
-        <el-table-column prop="phone" label="hr电话号码"></el-table-column>
-        <el-table-column label="操作">
-          <template #default="{row}">
-            <el-button @click="removeJob(row)" type="danger" size="small">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-size="pageSize"
-        layout="prev, pager, next"
-        :total="jobList.length">
-      </el-pagination>
-    </el-card>
+<div>
+  <el-row :gutter="12">
+    <el-col :span="24">
+      <el-card shadow="always">
+        <el-page-header @back="goBack" content="用户中心">
+        </el-page-header>
+      </el-card>
+    </el-col>
+  </el-row>
+  <el-tabs :tab-position="tabPosition" style="height: 625px;">
+    <el-tab-pane label="个人信息" >
+      <el-card class="page-container">
+        <template #header>
+          <div class="header">
+            <span>求职者个人资料</span>
+          </div>
+        </template>
+        <el-row>
+          <el-col :span="12">
+            <el-form :model="userInfo" :rules="rules" label-width="100px" size="large">
+              <el-form-item label="用户名">
+                <el-input v-model="userInfo.username" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="用户年龄" prop="age">
+                <el-input v-model="userInfo.age"></el-input>
+              </el-form-item>
+              <el-form-item label="现居地址" prop="live_city">
+                <el-input v-model="userInfo.live_city"></el-input>
+              </el-form-item>
+              <el-form-item label="期望行业" prop="desire_industry">
+                <el-input v-model="userInfo.desire_industry"></el-input>
+              </el-form-item>
+              <el-form-item label="最近工作行业" prop="cur_industry">
+                <el-input v-model="userInfo.cur_industry"></el-input>
+              </el-form-item>
+              <el-form-item label="学历" prop="degree">
+                <el-input v-model="userInfo.degree"></el-input>
+              </el-form-item>
+              <el-form-item label="开始工作时间" prop="start_work_date">
+                <el-date-picker
+                  v-model="userInfo.start_work_date"
+                  type="date"
+                  placeholder="选择日期"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="updateForm('userInfo')">提交修改</el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+      </el-card>
+
+    </el-tab-pane>
+    <el-tab-pane label="收藏列表">
+      <el-card class="customer-list">
+        <template #header>
+          <div class="header">
+            <span>收藏的招聘信息</span>
+          </div>
+        </template>
+        <el-table :data="pagedJobList" style="width: 100%">
+          <el-table-column prop="company" label="公司名"></el-table-column>
+          <el-table-column prop="title" label="职位名称"></el-table-column>
+          <el-table-column prop="phone" label="hr电话号码"></el-table-column>
+          <el-table-column label="操作">
+            <template #default="{row}">
+              <el-button @click="removeJob(row)" type="danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="prev, pager, next"
+          :total="jobList.length">
+        </el-pagination>
+      </el-card>
+    </el-tab-pane>
+    <el-tab-pane label="功能三" >待开发</el-tab-pane>
+    <el-tab-pane label="功能四">待开发</el-tab-pane>
+  </el-tabs>
   </div>
 </template>
 <script>
@@ -75,6 +92,7 @@ import {Message} from 'element-ui';
 export default {
   data() {
     return {
+      tabPosition: 'left',
       rules: {
         username: [{required: true, message: '用户名', trigger: 'blur'}, {
           pattern: /^\S{1,10}$/,
@@ -140,6 +158,10 @@ export default {
       } else {
         Message.error('删除失败');
       }
+    },
+    async goBack() {
+      await this.$store.dispatch('dashboard')
+      this.$router.push(`/login?redirect=${this.route.fullPath}`)
     }
   }
 };
