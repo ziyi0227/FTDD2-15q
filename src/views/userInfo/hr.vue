@@ -152,7 +152,7 @@ export default {
       }
     },
     goBack() {
-      console.log('go back');
+      this.$router.push('/dashboard')
     }
   }
 };

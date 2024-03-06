@@ -160,8 +160,7 @@ export default {
       }
     },
     async goBack() {
-      await this.$store.dispatch('dashboard')
-      this.$router.push(`/login?redirect=${this.route.fullPath}`)
+      this.$router.push('/dashboard')
     }
   }
 };
@@ -170,13 +169,15 @@ export default {
 
 .page-container {
   margin: 20px;
+
 }
 
 .header {
   font-size: 20px;
   font-weight: bold;
   padding: 15px;
-  background-color: #f0f2f5;
+  background-color: #409DFDFF;
+  color: white;
 }
 
 .form-row {
