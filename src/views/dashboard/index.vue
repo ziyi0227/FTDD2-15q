@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container id="c1">
     <template>
       <el-carousel :interval="5000" arrow="always">
         <el-carousel-item v-for="item in 4" :key="item">
@@ -30,24 +30,16 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
-      </el-col>
-    </el-row>
-
     <el-footer>Footer</el-footer>
   </el-container>
 </template>
 
 <script>
 import PanelGroup from '@/views/dashboard/components/PanelGroup'
+import LineChart from '@/views/dashboard/components/LineChart'
+import RaddarChart from '@/views/dashboard/components/RaddarChart'
+import PieChart from '@/views/dashboard/components/PieChart'
+import BarChart from '@/views/dashboard/components/BarChart'
 
 const lineChartData = {
   newVisitis: {
@@ -71,7 +63,11 @@ const lineChartData = {
 export default {
   name: 'Dashboard',
   components: {
-    PanelGroup
+    PanelGroup,
+    LineChart,
+    RaddarChart,
+    PieChart,
+    BarChart
   },
   data() {
     return {
@@ -110,4 +106,21 @@ export default {
     line-height: 60px;
   }
 
+  .el-container {
+    padding: 32px;
+    background-color: #eef0f4;
+    position: relative;
+
+    .chart-wrapper {
+      background: #fff;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+    }
+  }
+
+  @media (max-width:1024px) {
+    .chart-wrapper {
+      padding: 8px;
+    }
+  }
 </style>
