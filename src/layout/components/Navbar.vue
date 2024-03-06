@@ -4,6 +4,8 @@
 
     <breadcrumb class="breadcrumb-container" />
 
+    <span class="page-title">才识雷达平台</span>
+
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -61,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -80,6 +82,18 @@ export default {
     &:hover {
       background: rgba(0, 0, 0, .025)
     }
+  }
+
+  // 添加页面标题样式
+  .page-title {
+    float: left;
+    margin-left: 65%;
+    letter-spacing: 5px;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    color: #fd6901; // 根据你的设计选择颜色
+    line-height: 50px;
   }
 
   .breadcrumb-container {
