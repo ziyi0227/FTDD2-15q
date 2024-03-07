@@ -80,7 +80,13 @@
         </el-form-item>
 
 
-
+      <!-- 注册类型选择 -->
+      <el-form-item label="注册类型：" prop="userType" v-if="!isLoginForm">
+        <el-radio-group v-model="activeForm.userType">
+          <el-radio label="求职者" border >求职者</el-radio>
+          <el-radio label="面试官" border>面试官</el-radio>
+        </el-radio-group>
+      </el-form-item>
 
       <!-- 登录/注册按钮 -->
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
@@ -131,8 +137,9 @@ export default {
       }
     }
     return {
-
+      // radio1: '上海',
       activeForm: {
+        userType: '',
         username: '',
         password: '',
         confirmPassword: ''
@@ -140,7 +147,8 @@ export default {
       activeRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
         password: [{required: true, trigger: 'blur', validator: validatePassword}],
-        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }]
+        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }],
+        userType: [{required: true, message: '请选择注册类型', trigger: 'change'}]
       },
       loading: false,
       passwordType: 'password',
