@@ -72,7 +72,7 @@
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
-        background-color: $menuHover !important;
+        color: $menuTextHover !important;
       }
     }
 
@@ -87,6 +87,7 @@
 
       &:hover {
         background-color: $subMenuHover !important;
+        color: $subMenuTextHover !important;
       }
     }
   }
@@ -201,7 +202,7 @@
   .el-menu-item {
     &:hover {
       // you can use $subMenuHover
-      background-color: $menuHover !important;
+      color: $menuTextHover !important;
     }
   }
 
