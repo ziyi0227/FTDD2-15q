@@ -104,7 +104,7 @@
 
 <script>
 import {validUsername} from '@/utils/validate'
-import ElMessage from "autoprefixer/lib/utils";
+import ElMessage from 'autoprefixer/lib/utils';
 
 // 登录注册切换时，清空绑定模型中的数据
 

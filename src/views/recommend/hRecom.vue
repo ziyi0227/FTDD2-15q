@@ -89,7 +89,7 @@ export default {
         { label: 'UI 设计师', value: 'UI 设计师' }
       ],
       currentPage: 1, // 当前页数
-      pageSize: 10, // 每页显示人数
+      pageSize: 10 // 每页显示人数
     }
   },
   computed: {
@@ -118,7 +118,7 @@ export default {
     //   this.displayedTalents = this.filteredTalents
     // },
     handlePageChange(pageNum) {
-      this.currentPage = pageNum;
+      this.currentPage = pageNum
       this.displayedTalents = this.filteredTalents.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize);
     }
   }
