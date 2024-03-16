@@ -1,7 +1,13 @@
 <template>
   <div class="login-container">
-    <el-form ref="activeForm" :model="activeForm" :rules="activeRules" class="login-form" auto-complete="on"
-             label-position="left">
+    <el-form
+      ref="activeForm"
+      :model="activeForm"
+      :rules="activeRules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">欢迎使用才识雷达平台</h3>
@@ -22,7 +28,7 @@
         />
       </el-form-item>
 
-<!--      登录表单  -->
+      <!--      登录表单  -->
 
       <el-form-item v-if="isLoginForm" prop="password">
         <span class="svg-container">
@@ -61,36 +67,39 @@
           @keyup.enter.native="handleLoginOrRegister"
         />
       </el-form-item>
-        <div class="password-confirm-gap" v-if="!isLoginForm"></div>
-        <!-- 确认密码 -->
-        <el-form-item  v-if="!isLoginForm" prop="confirmPassword">
-          <span class="svg-container">
-            <svg-icon icon-class="password"/>
-          </span>
-          <el-input
-            v-model="activeForm.confirmPassword"
-            :type="passwordType"
-            placeholder="确认密码"
-            name="confirmPassword"
-            tabindex="3"
-            auto-complete="on"
-            @keyup.enter.native="handleLoginOrRegister"
-          />
+      <div v-if="!isLoginForm" class="password-confirm-gap"/>
+      <!-- 确认密码 -->
+      <el-form-item v-if="!isLoginForm" prop="rePassword">
+        <span class="svg-container">
+          <svg-icon icon-class="password"/>
+        </span>
+        <el-input
+          v-model="activeForm.rePassword"
+          :type="passwordType"
+          placeholder="确认密码"
+          name="rePassword"
+          tabindex="3"
+          auto-complete="on"
+          @keyup.enter.native="handleLoginOrRegister"
+        />
 
-        </el-form-item>
-
+      </el-form-item>
 
       <!-- 注册类型选择 -->
-      <el-form-item label="注册类型：" prop="userType" v-if="!isLoginForm">
-        <el-radio-group v-model="activeForm.userType">
-          <el-radio label="求职者" border >求职者</el-radio>
-          <el-radio label="面试官" border>面试官</el-radio>
+      <el-form-item v-if="!isLoginForm" label="注册类型：" prop="type">
+        <el-radio-group v-model="activeForm.type">
+          <el-radio label="1" border>求职者</el-radio>
+          <el-radio label="2" border>面试官</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <!-- 登录/注册按钮 -->
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                 @click.native.prevent="handleLoginOrRegister">{{ activeButton }}
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLoginOrRegister"
+      >{{ activeButton }}
       </el-button>
 
       <!-- 切换按钮 -->
@@ -103,12 +112,13 @@
 </template>
 
 <script>
-import {validUsername} from '@/utils/validate'
-import ElMessage from 'autoprefixer/lib/utils';
-
+import { validUsername } from '@/utils/validate'
+import ElMessage from 'autoprefixer/lib/utils'
+import { login } from '@/api/user.js'
+import { register } from '@/api/user.js'
+import router from '@/router'
+import { Message } from 'element-ui'
 // 登录注册切换时，清空绑定模型中的数据
-
-
 
 export default {
   name: 'LoginAndRegister',
@@ -127,10 +137,10 @@ export default {
         callback()
       }
     }
-    const validateConfirmPassword = (rule, value, callback) => {
+    const validateRePassword = (rule, value, callback) => {
       if (value !== this.activeForm.password) {
         callback(new Error('两次输入的密码不一致'))
-      }else if(value===''){
+      } else if (value === '') {
         callback(new Error('请再次确认密码'))
       } else {
         callback()
@@ -139,27 +149,27 @@ export default {
     return {
       // radio1: '上海',
       activeForm: {
-        userType: '',
+        type: '',
         username: '',
         password: '',
-        confirmPassword: ''
+        rePassword: ''
       },
       activeRules: {
-        username: [{required: true, trigger: 'blur', validator: validateUsername}],
-        password: [{required: true, trigger: 'blur', validator: validatePassword}],
-        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }],
-        userType: [{required: true, message: '请选择注册类型', trigger: 'change'}]
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        rePassword: [{ required: true, trigger: 'blur', validator: validateRePassword }],
+        type: [{ required: true, message: '请选择注册类型', trigger: 'change' }]
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined,
       activeButton: '登 录',
-      isLoginForm: true,
+      isLoginForm: true
     }
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -177,33 +187,56 @@ export default {
       })
     },
     toggleForm() {
-      this.clearData();
+      this.clearData()
       this.isLoginForm = !this.isLoginForm
       this.activeButton = this.isLoginForm ? '登 录' : '注 册'
       this.$nextTick(() => {
         this.$refs.username.focus()
       })
     },
-    clearData(){
-      this.activeForm.username=''
-      this.activeForm.password=''
-      this.activeForm.confirmPassword=''
+    clearData() {
+      this.activeForm.username = ''
+      this.activeForm.password = ''
+      this.activeForm.rePassword = ''
     },
-     handleLoginOrRegister() {
-      this.$refs.activeForm.validate(async (valid) => {
+    async handleLoginOrRegister() {
+      this.$refs.activeForm.validate(valid => {
         if (valid) {
           this.loading = true
-          try {
-            if (this.isLoginForm) {
-              await this.$store.dispatch('user/login', this.activeForm)
-            } else {
-              await this.$store.dispatch('user/register', this.activeForm)
-            }
-            this.$router.push({path: this.redirect || '/'})
-            this.loading = false
-          } catch (err) {
-            ElMessage.error(err.message || '操作失败，请稍后重试')
-            this.loading = false
+          if (this.isLoginForm) {
+            this.$store.dispatch('user/login', this.activeForm).then(() => {
+              this.loading = false
+              this.$router.push({ path: this.redirect || '/' })
+              Message.success('登录成功')
+            }).catch(() => {
+              this.loading = false
+            })
+            // login(this.activeForm).then(res => {
+            //   if (res.code === 20000) {
+            //     this.loading = false
+            //     Message.success('登录成功')
+            //     // this.$router.push('/dashboard')
+            //   } else {
+            //     this.loading = false
+            //     Message.error(res.message)
+            //   }
+            // }).catch(() => {
+            //   this.loading = false
+            // })
+          }
+          if (!this.isLoginForm) {
+            register(this.activeForm).then(res => {
+              if (res.code === 20000) {
+                this.loading = false
+                Message.success('注册成功')
+                this.toggleForm()
+              } else {
+                this.loading = false
+                Message.error(res.message)
+              }
+            }).catch(() => {
+              this.loading = false
+            })
           }
         } else {
           console.log('error submit!!')
@@ -213,8 +246,6 @@ export default {
     }
   }
 }
-
-
 
 </script>
 
@@ -329,6 +360,7 @@ $light_gray: #6c9bbe;
     cursor: pointer;
     user-select: none;
   }
+
   .password-confirm-gap {
     margin-top: 16px; /* 根据需要调整合适的间距大小 */
   }
