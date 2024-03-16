@@ -23,43 +23,72 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="商品名称">
+              <el-form-item label="职位标题">
                 <span>{{ props.row.name }}</span>
               </el-form-item>
-              <el-form-item label="所属店铺">
-                <span>{{ props.row.shop }}</span>
+              <el-form-item label="公司">
+                <span>{{ props.row.company }}</span>
               </el-form-item>
-              <el-form-item label="商品 ID">
-                <span>{{ props.row.id }}</span>
+              <el-form-item label="城市">
+                <span>{{ props.row.city }}</span>
               </el-form-item>
-              <el-form-item label="店铺 ID">
-                <span>{{ props.row.shopId }}</span>
+              <el-form-item label="职位子类">
+                <span>{{ props.row.jd_sub_type }}</span>
               </el-form-item>
-              <el-form-item label="商品分类">
-                <span>{{ props.row.category }}</span>
+              <el-form-item label="需求人数">
+                <span>{{ props.row.require_nums }}</span>
               </el-form-item>
-              <el-form-item label="店铺地址">
-                <span>{{ props.row.address }}</span>
+              <el-form-item label="月薪">
+                <template slot-scope="{ props }">
+                  <span>{{ props.row.min_salary }} ~ {{ props.row.max_salary }}</span>
+                </template>
               </el-form-item>
-              <el-form-item label="商品描述">
-                <span>{{ props.row.desc }}</span>
+              <el-form-item label="日期">
+                <template slot-scope="{ props }">
+                  <span>{{ props.row.start_date }} ~ {{ props.row.end_date }}</span>
+                </template>
+              </el-form-item>
+              <el-form-item label="是否要求出差">
+                <span>{{ props.row.is_travel }}</span>
+              </el-form-item>
+              <el-form-item label="工作经验年限">
+                <span>{{ props.row.min_years }}</span>
+              </el-form-item>
+              <el-form-item label="最低学历">
+                <span>{{ props.row.min_edu_level }}</span>
+              </el-form-item>
+              <el-form-item label="职位与专业技能">
+                <span>{{ props.row.title_skill }}</span>
+              </el-form-item>
+              <el-form-item label="专业知识">
+                <span>{{ props.row.knowledge }}</span>
+              </el-form-item>
+              <el-form-item label="个人素养">
+                <span>{{ props.row.quality }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column>
-        <el-table-column
           prop="name"
-          label="姓名"
+          label="职位标题"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="company"
+          label="公司"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="city"
+          label="城市"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          label="月薪">
+          <template slot-scope="{ row }">
+            {{ row.min_salary }} ~ {{ row.max_salary }}
+          </template>
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -139,7 +168,7 @@ export default {
   }
 
   .demo-table-expand label {
-    width: 100px;
+    width: 120px;
     color: #99a9bf;
   }
 
