@@ -2,29 +2,30 @@
   <div class="container">
     <!--搜索栏-->
     <el-card>
-      <el-input placeholder="请输入内容" v-model="searchmodel.jobinput" class="input-with-select">
-        <el-select v-model="searchmodel.jobtype" slot="prepend" placeholder="请选择">
-          <el-option label="餐厅名" value="1"></el-option>
-          <el-option label="订单号" value="2"></el-option>
-          <el-option label="用户电话" value="3"></el-option>
+      <el-input v-model="searchmodel.jobinput" placeholder="请输入内容" class="input-with-select" @change="fetchData">
+        <el-select slot="prepend" v-model="searchmodel.jobtype" placeholder="请选择" @change="fetchData">
+          <el-option label="职位标题" value="1" />
+          <el-option label="公司" value="2" />
+          <el-option label="职位类别" value="3" />
         </el-select>
-        <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-button slot="append" icon="el-icon-search" @click="getJobList"/>
       </el-input>
     </el-card>
     <el-card>
       <el-table
         :data="jobList"
         stripe
-        style="width: 100%">
+        style="width: 100%"
+      >
         <el-table-column
           type="selection"
-          width="55">
-        </el-table-column>
+          width="55"
+        />
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="职位标题">
-                <span>{{ props.row.name }}</span>
+                <span>{{ props.row.jdTitle }}</span>
               </el-form-item>
               <el-form-item label="公司">
                 <span>{{ props.row.company }}</span>
@@ -33,32 +34,32 @@
                 <span>{{ props.row.city }}</span>
               </el-form-item>
               <el-form-item label="职位子类">
-                <span>{{ props.row.jd_sub_type }}</span>
+                <span>{{ props.row.jdSubType }}</span>
               </el-form-item>
               <el-form-item label="需求人数">
-                <span>{{ props.row.require_nums }}</span>
+                <span>{{ props.row.requireNums }}</span>
               </el-form-item>
               <el-form-item label="月薪">
                 <template slot-scope="{ props }">
-                  <span>{{ props.row.min_salary }} ~ {{ props.row.max_salary }}</span>
+                  <span>{{ props.row.minSalary }} ~ {{ props.row.maxSalary }}</span>
                 </template>
               </el-form-item>
               <el-form-item label="日期">
                 <template slot-scope="{ props }">
-                  <span>{{ props.row.start_date }} ~ {{ props.row.end_date }}</span>
+                  <span>{{ props.row.startDate }} ~ {{ props.row.endDate }}</span>
                 </template>
               </el-form-item>
               <el-form-item label="是否要求出差">
-                <span>{{ props.row.is_travel }}</span>
+                <span>{{ props.row.isTravel }}</span>
               </el-form-item>
               <el-form-item label="工作经验年限">
-                <span>{{ props.row.min_years }}</span>
+                <span>{{ props.row.minYears === -1 ? '不限' : props.row.minYears }}</span>
               </el-form-item>
               <el-form-item label="最低学历">
-                <span>{{ props.row.min_edu_level }}</span>
+                <span>{{ props.row.minEducation }}</span>
               </el-form-item>
               <el-form-item label="职位与专业技能">
-                <span>{{ props.row.title_skill }}</span>
+                <span>{{ props.row.titleSkill }}</span>
               </el-form-item>
               <el-form-item label="专业知识">
                 <span>{{ props.row.knowledge }}</span>
@@ -70,33 +71,35 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="jdTitle"
           label="职位标题"
-          width="180">
-        </el-table-column>
+          width="180"
+        />
         <el-table-column
           prop="company"
           label="公司"
-          width="180">
-        </el-table-column>
+          width="180"
+        />
         <el-table-column
           prop="city"
           label="城市"
-          width="180">
-        </el-table-column>
+          width="180"
+        />
         <el-table-column
-          label="月薪">
+          label="月薪"
+        >
           <template slot-scope="{ row }">
-            {{ row.min_salary }} ~ {{ row.max_salary }}
+            {{ row.minSalary }} ~ {{ row.maxSalary }}
           </template>
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
-          width="160">
+          width="160"
+        >
           <template>
             <el-col :span="8">
-              <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+              <el-button type="warning" icon="el-icon-star-off" circle />
             </el-col>
             <el-col :span="16">
               <el-button type="primary" round>投递</el-button>
@@ -105,40 +108,74 @@
         </el-table-column>
       </el-table>
     </el-card>
-  <!--  分页组件-->
+    <!--  分页组件-->
     <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
       :current-page="searchmodel.pageNo"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="searchmodel.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="total">
-    </el-pagination>
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
+import jobApi from '@/api/jobTable'
+
 export default {
   data() {
     return {
       total: 0,
       searchmodel: {
         pageNo: 1,
-        pageSize: 10
+        pageSize: 10,
+        jobinput: '',
+        jobtype: '',
+        jdTitle: '',
+        company: '',
+        jdSubType: ''
       },
-      jobList: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }]
+      jobList: []
     }
   },
+  created() {
+    this.getJobList()
+  },
   methods: {
+    fetchData() {
+      // 根据选择的值发起请求并获取数据，这里简单地模拟数据
+      switch (this.searchmodel.jobtype) {
+        case '1':
+          this.searchmodel.jdTitle = this.searchmodel.jobinput
+          this.searchmodel.company = ''
+          this.searchmodel.jdSubType = ''
+          break
+        case '2':
+          this.searchmodel.company = this.searchmodel.jobinput
+          this.searchmodel.jdTitle = ''
+          this.searchmodel.jdSubType = ''
+          break
+        case '3':
+          this.searchmodel.jdSubType = this.searchmodel.jobinput
+          this.searchmodel.jdTitle = ''
+          this.searchmodel.company = ''
+          break
+        default:
+          break
+      }
+    },
+    getJobList() {
+      jobApi.getJobList(this.searchmodel).then(response => {
+        this.jobList = response.data.rows
+        this.total = response.data.total
+      })
+      this.$message({
+        message: '查询成功',
+        type: 'success'
+      })
+    },
     handleSizeChange() {
     },
     handleCurrentChange() {
