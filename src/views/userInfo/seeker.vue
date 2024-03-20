@@ -3,7 +3,7 @@
     <el-row :gutter="12">
       <el-col :span="24">
         <el-card shadow="always">
-          <el-page-header content="用户中心" @back="goBack"/>
+          <el-page-header content="用户中心" @back="goBack" />
         </el-card>
       </el-col>
     </el-row>
