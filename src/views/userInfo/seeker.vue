@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <el-row :gutter="12">
       <el-col :span="24">
         <el-card shadow="always">
@@ -7,30 +7,31 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-tabs :tab-position="tabPosition" style="height: 625px;">
+    <el-tabs :tab-position="tabPosition" type="card" style="height: 800px;">
       <el-tab-pane label="个人信息">
-        <el-card class="page-container">
-          <template #header>
-            <div class="header">
-              <span>求职者个人资料</span>
-            </div>
-          </template>
-          <!-- 头像展示以及编辑 -->
+        <!--        <el-card class="page-container">-->
+        <template>
+          <div class="header">
+            <span>求职者个人资料</span>
+          </div>
+        </template>
+        <!-- 头像展示以及编辑 -->
+        <el-card class>
           <div class="avatar-and-username" style="display: flex; align-items: center;">
             <!-- 头像展示以及编辑 -->
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="/upload/avatar"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
               style="display: inline-block;"
             >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <img v-if="imageUrl" :src="userInfo.avatar" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon">编辑</i>
             </el-upload>
             <div style="margin-left: 10px; display: inline-block;">
-              <h2>用户名</h2>
+              <h2>{{ userInfo.username }}</h2>
             </div>
           </div>
         </el-card>
@@ -39,7 +40,7 @@
           <div>
             <el-row :gutter="20">
               <el-col :span="6">
-                <el-card  class="card-hover-feedback" @click.native="peopleAdd">
+                <el-card class="card-hover-feedback" @click.native="peopleAdd">
                   <div>
                     <el-statistic
                       group-separator=","
@@ -99,6 +100,7 @@
           </div>
         </el-card>
       </el-tab-pane>
+      <!--      -->
       <el-tab-pane label="收藏列表">
         <el-card class="customer-list">
           <template #header>
@@ -134,7 +136,7 @@
 import { reactive } from 'vue' // 引入Vue 2的reactive以创建响应式对象
 import { Message } from 'element-ui'
 import isfollowid from 'core-js/internals/array-includes'
-
+import { getInfo, getUserInfo, updateAvatar } from '@/api/user' // 引入获取用户信息的接口
 export default {
   data() {
     return {
@@ -166,13 +168,7 @@ export default {
       },
       userInfo: {
         username: '',
-        email: '',
-        age: '',
-        live_city: '',
-        desire_industry: '',
-        cur_industry: '',
-        degree: '',
-        start_work_date: ''
+        avatar: ''
       },
       jobList: [
         { company: '公司1', title: '职位1', phone: '1234567890' },
@@ -192,14 +188,22 @@ export default {
       return this.jobList.slice(start, end)
     }
   },
+  created() {
+    this.getInfo()
+  },
   methods: {
     peopleAdd() {
       this.value2 += 1
     },
 
     // 上传头像前的校验
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+    // handleAvatarSuccess(res, file) {
+    //   this.imageUrl = URL.createObjectURL(file.raw)
+    // },
+    handleAvatarSuccess(file) {
+      const filepath = updateAvatar(file)
+      this.userInfo.avatar = filepath
+      Message.success('上传头像成功')
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -239,15 +243,19 @@ export default {
     },
     async goBack() {
       this.$router.push('/dashboard')
+    },
+    async getInfo() {
+      const res = await getUserInfo()
+      this.userInfo = res.data
+      Message.success('获取用户信息成功')
     }
   }
 }
 </script>
 <style scoped lang="scss">
-
 .page-container {
-  margin: 20px;
-
+  max-width: 1600px; /* 设置最大宽度 */
+  margin: 0 auto; /* 水平居中 */
 }
 
 .header {
@@ -258,28 +266,16 @@ export default {
   color: white;
 }
 
-.form-row {
+.info-card {
   margin-top: 20px;
 }
 
-/* 提交按钮 hover 和 active 状态 */
-.el-form-item button:hover,
-.el-form-item button:focus {
-  background-color: #2b85e4;
+.avatar-and-username {
+  display: flex;
+  align-items: center;
 }
 
-/* 错误提示样式 */
-.el-form-item.is-error .el-input__inner,
-.el-form-item.is-error .el-date-editor__editor {
-  border-color: #ff4949;
-}
-
-/* 成功提示样式 */
-.el-message-box__content.success {
-  color: #67C23A;
-}
-
-.avatar-uploader .el-upload {
+.avatar-uploader {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
@@ -313,13 +309,42 @@ export default {
 }
 
 .card-hover-feedback {
-  /* 默认样式 */
+  display: flex; /* 使用 flex 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
   transition: background-color 0.3s ease;
+  margin-bottom: 20px; /* 调整卡片之间的底部间距 */
+  margin-right: 20px; /* 调整卡片之间的右侧间距 */
+  height: 150px;
 
-  /* 鼠标悬停时的反馈样式 */
   &:hover {
-    background-color: #f5f7fa; /* 可以修改为你想要的颜色 */
-    cursor: pointer; /* 更改鼠标形状为手型，表明可点击 */
+    background-color: #f5f7fa;
+    cursor: pointer;
   }
+}
+
+
+//.el-tabs__item {
+//  font-size: 16px !important; /* 设置标签字体大小 */
+//  height: 60px !important; /* 设置标签高度 */
+//}
+
+.el-tab-pane {
+  font-size: 16px; /* 设置内容字体大小 */
+}
+
+.el-tabs__content {
+  height: 1200px !important; /* 设置内容区域的高度 */
+  overflow-y: auto !important; /* 如果内容过多，显示滚动条 */
+}
+
+</style>
+
+<style>
+.el-tabs__item {
+  font-size: 20px !important; /* 设置标签字体大小 */
+  height: 100px !important; /* 设置标签高度 */
+  line-height: 100px; /* 设置标签文字垂直居中 */
+  text-align: center; /* 设置标签文字水平居中 */
 }
 </style>
