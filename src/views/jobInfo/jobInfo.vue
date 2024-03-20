@@ -8,7 +8,7 @@
           <el-option label="公司" value="2" />
           <el-option label="职位类别" value="3" />
         </el-select>
-        <el-button slot="append" icon="el-icon-search" @click="getJobList"/>
+        <el-button slot="append" icon="el-icon-search" @click="getJobList" />
       </el-input>
     </el-card>
     <el-card>
@@ -97,9 +97,9 @@
           label="操作"
           width="160"
         >
-          <template>
+          <template slot-scope="scope">
             <el-col :span="8">
-              <el-button type="warning" icon="el-icon-star-off" circle />
+              <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)" />
             </el-col>
             <el-col :span="16">
               <el-button type="primary" round>投递</el-button>
@@ -123,6 +123,7 @@
 
 <script>
 import jobApi from '@/api/jobTable'
+import favorApi from '@/api/favor'
 
 export default {
   data() {
@@ -175,6 +176,23 @@ export default {
         message: '查询成功',
         type: 'success'
       })
+    },
+    setFavor(row) {
+      // 假设您已经获取到jdNo
+      const jdNo = row.jdNo
+
+      favorApi.setFavor(jdNo)
+        .then(data => {
+          this.$message({
+            message: '收藏成功',
+            type: 'success'
+          })
+        })
+        .catch(error => {
+          this.$message.error({
+            message: '收藏失败' + error
+          })
+        })
     },
     handleSizeChange() {
     },
