@@ -22,10 +22,23 @@ export function getInfo(token) {
     params: { token }
   })
 }
+export function getUserInfo() {
+  return request({
+    url: '/users/Info',
+    method: 'get'
+  })
+}
 
 export function logout() {
   return request({
     url: '/users/logout',
     method: 'post'
+  })
+}
+export function updateAvatar(data) {
+  return request({
+    url: '/users/upload/avatar',
+    method: 'post',
+    data
   })
 }
