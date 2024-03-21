@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
 export default {
-  setFavor(jdNo) {
+  deliver(jdNo) {
     return request({
-      url: `/favor/${jdNo}`,
-      method: 'put'
+      url: `/job-table/deliver/${jdNo}`,
+      method: 'post'
     })
       .then(response => response)
       .catch(error => {

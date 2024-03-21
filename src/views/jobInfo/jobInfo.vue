@@ -102,7 +102,7 @@
               <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)" />
             </el-col>
             <el-col :span="16">
-              <el-button type="primary" round>投递</el-button>
+              <el-button type="primary" round @click="setDeliver">投递</el-button>
             </el-col>
           </template>
         </el-table-column>
@@ -124,6 +124,7 @@
 <script>
 import jobApi from '@/api/jobTable'
 import favorApi from '@/api/favor'
+import actionApi from '@/api/action'
 
 export default {
   data() {
@@ -184,13 +185,28 @@ export default {
       favorApi.setFavor(jdNo)
         .then(data => {
           this.$message({
-            message: '收藏成功',
+            message: data.message,
             type: 'success'
           })
         })
         .catch(error => {
           this.$message.error({
             message: '收藏失败' + error
+          })
+        })
+    },
+    setDeliver(row) {
+      const jdNo = row.jdNo
+      actionApi.deliver(jdNo)
+        .then(data => {
+          this.$message({
+            message: data.message,
+            type: 'success'
+          })
+        })
+        .catch(error => {
+          this.$message.error({
+            message: '投递失败' + error
           })
         })
     },
