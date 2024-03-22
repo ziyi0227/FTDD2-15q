@@ -1,62 +1,102 @@
 <template>
 
-    <div class="talent-recommendation">
-      <!-- 搜索框 -->
-      <el-form inline>
-        <el-form-item label="职位筛选：" prop="query">
-          <el-select v-model="searchKeyword" placeholder="按姓名/职位搜索">
-            <el-option
-              v-for="option in searchOptions"
-              :key="option.value"
-              :label="option.label"
-              :value="option.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-
-      <!-- 分页组件 -->
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="totalTalents"
-        @current-change="handlePageChange"
-      />
-      <!-- 将整体的 el-card 移入 v-for 循环内 -->
-      <div v-for="(talent, index) in talents" :key="index" class="talent-card-container">
-        <el-card class="recommendation-card">
-          <el-radio-group v-model="size" @change="handleSizeChange">
-<!--            <el-radio label="medium">中等</el-radio>-->
-<!--            <el-radio label="small">小型</el-radio>-->
-<!--            <el-radio label="mini">超小</el-radio>-->
-            -->
-          </el-radio-group>
-
-          <el-descriptions :title="`${index + 1}. ${talent.username}`" :column="3" :size="size">
-            <el-descriptions-item :label="'手机号'">
-              {{ talent.phone }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="'居住地'">
-              {{ talent.location }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="'职位标签'">
-              <el-tag>{{ talent.tag }}</el-tag>
-            </el-descriptions-item>
-            <template slot="extra">
-              <el-button type="primary" size="small">查看详情</el-button>
-            </template>
-          </el-descriptions>
+  <div class="talent-recommendation">
+    <el-row gutter="20">
+      <el-col span="7" >
+        <el-card class="user-card">
+          user的信息
         </el-card>
-      </div>
+        <el-card class="option-card">
+          <div slot="header" class="clearfix">
+            <span>操作卡片</span>
+          </div>
+          <div class="recommendation-button">
+            <el-button type="danger" @click="handleRecommendation" :loading="true">开始推荐</el-button>
+          </div>
+          <div class="divider"></div>
+          <div class="layout-button">
+            <span style="margin-right: 10px">布局：</span>
+            <el-button-group>
+              <el-button type="danger" icon="el-icon-s-operation"></el-button>
+              <el-button type="danger" icon="el-icon-menu"></el-button>
+              <el-button type="danger" icon="el-icon-share"></el-button>
+            </el-button-group>
+          </div>
+          <div class="divider"></div>
+          <div style="display: flex; align-items: center; margin-bottom: 5px">
+            <span style="margin-right: 0px">满意度：</span>
+            <el-rate
+              v-model="value"
+              :colors="['#99A9BF', '#f77f2a', '#ff5900']">
+            </el-rate>
+          </div>
+        </el-card>
+        <el-card class="dialog-card">
+          与ai的交互地方
+        </el-card>
+      </el-col>
+      <el-col span="17">
+        <!--这里实现三种界面-->
+        <!-- 将整体的 el-card 移入 v-for 循环内 -->
+        <div v-for="(talent, index) in talents" :key="index" class="talent-card-container">
+          <el-card class="recommendation-card">
+            <el-radio-group v-model="size" @change="handleSizeChange">
+              <!--            <el-radio label="medium">中等</el-radio>-->
+              <!--            <el-radio label="small">小型</el-radio>-->
+              <!--            <el-radio label="mini">超小</el-radio>-->
+              -->
+            </el-radio-group>
 
-      <!-- ...添加更多 tab 内容，比如公司推荐等... -->
-    </div>
+            <el-descriptions :title="`${index + 1}. ${talent.username}`" :column="3" :size="size">
+              <el-descriptions-item :label="'手机号'">
+                {{ talent.phone }}
+              </el-descriptions-item>
+              <el-descriptions-item :label="'居住地'">
+                {{ talent.location }}
+              </el-descriptions-item>
+              <el-descriptions-item :label="'职位标签'">
+                <el-tag type="danger">{{ talent.tag }}</el-tag>
+              </el-descriptions-item>
+              <template slot="extra">
+                <el-button type="primary" size="small">查看详情</el-button>
+              </template>
+            </el-descriptions>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!--&lt;!&ndash; 搜索框 &ndash;&gt;-->
+    <!--<el-form inline>-->
+    <!--  <el-form-item label="职位筛选：" prop="query">-->
+    <!--    <el-select v-model="searchKeyword" placeholder="按姓名/职位搜索">-->
+    <!--      <el-option-->
+    <!--        v-for="option in searchOptions"-->
+    <!--        :key="option.value"-->
+    <!--        :label="option.label"-->
+    <!--        :value="option.value"-->
+    <!--      />-->
+    <!--    </el-select>-->
+    <!--  </el-form-item>-->
+    <!--</el-form>-->
+
+    <!--&lt;!&ndash; 分页组件 &ndash;&gt;-->
+    <!--<el-pagination-->
+    <!--  background-->
+    <!--  layout="prev, pager, next"-->
+    <!--  :total="totalTalents"-->
+    <!--  @current-change="handlePageChange"-->
+    <!--/>-->
+
+    <!-- ...添加更多 tab 内容，比如公司推荐等... -->
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      value: null,
       size: '',
       talents: [
         {
@@ -119,7 +159,7 @@ export default {
     // },
     handlePageChange(pageNum) {
       this.currentPage = pageNum
-      this.displayedTalents = this.filteredTalents.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize);
+      this.displayedTalents = this.filteredTalents.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize)
     }
   }
 }
@@ -146,11 +186,41 @@ export default {
   margin-bottom: 24px;
 }
 
+.recommendation-button {
+  display: flex;
+  justify-content: center;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+
+.divider {
+  border-top: 1px solid #ccc;
+  margin-top: 20px; /* 调整分割线与按钮之间的距离 */
+  margin-bottom: 20px; /* 调整分割线与下方内容之间的距离 */
+}
+
+
+
 .descriptions-extra-margin {
   margin-top: 16px;
 }
 
 .talent-description {
   margin-bottom: 16px;
+}
+
+.user-card {
+  margin-bottom: 24px;
+}
+
+.option-card {
+  margin-bottom: 24px;
 }
 </style>
