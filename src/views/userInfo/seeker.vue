@@ -3,7 +3,7 @@
     <el-row :gutter="12">
       <el-col :span="24">
         <el-card shadow="always">
-          <el-page-header content="用户中心" @back="goBack" />
+          <el-page-header content="用户中心" @back="goBack"/>
         </el-card>
       </el-col>
     </el-row>
@@ -18,21 +18,27 @@
         <!-- 头像展示以及编辑 -->
         <el-card class>
           <div class="avatar-and-username" style="display: flex; align-items: center;">
-            <!-- 头像展示以及编辑 -->
+            <!--             头像展示以及编辑 -->
             <el-upload
               class="avatar-uploader"
-              action="/upload/avatar"
+              action=""
+              :http-request="onFileSelected"
+              name="file"
+              :auto-upload="true"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
               style="display: inline-block;"
             >
-              <img v-if="imageUrl" :src="userInfo.avatar" class="avatar">
+              <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon">编辑</i>
             </el-upload>
-            <div style="margin-left: 10px; display: inline-block;">
-              <h2>{{ userInfo.username }}</h2>
-            </div>
+<!--            <div class="avatar-and-username" style="display: flex; align-items: center;">-->
+<!--              &lt;!&ndash; 输入框用于选择文件 &ndash;&gt;-->
+<!--              <input type="file" id="avatarInput" accept="image/*" @change="onFileSelected">-->
+<!--              <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">-->
+              <div style="margin-left: 10px; display: inline-block;">
+                <h2>{{ userInfo.username }}</h2>
+              </div>
+<!--            </div>-->
           </div>
         </el-card>
         <!--        -->
@@ -133,10 +139,10 @@
   </div>
 </template>
 <script>
-import { reactive } from 'vue' // 引入Vue 2的reactive以创建响应式对象
 import { Message } from 'element-ui'
 import isfollowid from 'core-js/internals/array-includes'
-import { getInfo, getUserInfo, updateAvatar } from '@/api/user' // 引入获取用户信息的接口
+import { getUserInfo, updateAvatar, updateUserInfo } from '@/api/user'
+import axios from 'axios' // 引入获取用户信息的接口
 export default {
   data() {
     return {
@@ -147,17 +153,12 @@ export default {
       value2: 1314,
       title: '收藏职位数',
       title2: '简历被查看次数',
-      imageUrl: '',
+      // imageUrl: '',
       tabPosition: 'left',
       rules: {
         username: [{ required: true, message: '用户名', trigger: 'blur' }, {
           pattern: /^\S{1,10}$/,
           message: '昵称必须是1-10位的非空字符串',
-          trigger: 'blur'
-        }],
-        age: [{ required: true, message: '用户年龄', trigger: 'blur' }, {
-          type: 'number',
-          message: '用户年龄格式不正确',
           trigger: 'blur'
         }],
         live_city: [{ required: true, message: '现居地址', trigger: 'blur' }],
@@ -195,15 +196,36 @@ export default {
     peopleAdd() {
       this.value2 += 1
     },
+    // 新增处理文件选择事件的方法
+    onFileSelected(file) {
+      // const file = event.target.files[0]
 
-    // 上传头像前的校验
-    // handleAvatarSuccess(res, file) {
-    //   this.imageUrl = URL.createObjectURL(file.raw)
-    // },
-    handleAvatarSuccess(file) {
-      const filepath = updateAvatar(file)
-      this.userInfo.avatar = filepath
-      Message.success('上传头像成功')
+      if (!file) return
+
+      const formData = new FormData()
+      formData.append('file', file.file)
+
+      this.setAvatar(formData)
+    },
+    // 更新uploadAvatar方法，去除对el-upload的依赖
+    setAvatar(formData) {
+      updateAvatar(formData).then(res => {
+        if (res.code === 20000) {
+          this.userInfo.avatar = res.data
+          console.log(res.data)
+          console.log(res.message)
+          Message.success('上传头像成功')
+          updateUserInfo(this.userInfo).then(res => {
+            if (res.code === 20000) {
+              Message.success('更新用户信息成功')
+            } else {
+              Message.error('更新用户信息失败')
+            }
+          })
+        } else {
+          Message.error('上传头像失败------------')
+        }
+      })
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -248,6 +270,14 @@ export default {
       const res = await getUserInfo()
       this.userInfo = res.data
       Message.success('获取用户信息成功')
+    },
+    uploadSuccess(result) {
+      if (result.success) {
+        this.userInfo.avatar = result.data // 将返回的头像URL设置为用户信息中的头像地址
+        console.log('上传成功', result.data)
+      } else {
+        this.$message.error('上传头像失败')
+      }
     }
   }
 }

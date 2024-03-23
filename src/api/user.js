@@ -37,8 +37,16 @@ export function logout() {
 }
 export function updateAvatar(data) {
   return request({
-    url: '/users/upload/avatar',
+    url: '/common/upload',
     method: 'post',
+    data
+  })
+}
+
+export function updateUserInfo(data) {
+  return request({
+    url: '/users/updateInfo',
+    method: 'put',
     data
   })
 }
