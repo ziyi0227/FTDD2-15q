@@ -1,8 +1,7 @@
 <template>
-
   <div class="talent-recommendation">
     <el-row gutter="20">
-      <el-col span="7" >
+      <el-col span="7">
         <el-card class="user-card">
           user的信息
         </el-card>
@@ -11,24 +10,24 @@
             <span>操作卡片</span>
           </div>
           <div class="recommendation-button">
-            <el-button type="danger" @click="handleRecommendation" :loading="true">开始推荐</el-button>
+            <el-button type="danger" :loading="true" @click="handleRecommendation">开始推荐</el-button>
           </div>
-          <div class="divider"></div>
+          <div class="divider" />
           <div class="layout-button">
             <span style="margin-right: 10px">布局：</span>
             <el-button-group>
-              <el-button type="danger" icon="el-icon-s-operation"></el-button>
-              <el-button type="danger" icon="el-icon-menu"></el-button>
-              <el-button type="danger" icon="el-icon-share"></el-button>
+              <el-button type="danger" icon="el-icon-s-operation" @click="changeLayout('operation')" />
+              <el-button type="danger" icon="el-icon-menu" @click="changeLayout('menu')" />
+              <el-button type="danger" icon="el-icon-share" @click="changeLayout('share')" />
             </el-button-group>
           </div>
-          <div class="divider"></div>
+          <div class="divider" />
           <div style="display: flex; align-items: center; margin-bottom: 5px">
             <span style="margin-right: 0px">满意度：</span>
             <el-rate
               v-model="value"
-              :colors="['#99A9BF', '#f77f2a', '#ff5900']">
-            </el-rate>
+              :colors="['#99A9BF', '#f77f2a', '#ff5900']"
+            />
           </div>
         </el-card>
         <el-card class="dialog-card">
@@ -36,32 +35,49 @@
         </el-card>
       </el-col>
       <el-col span="17">
+
         <!--这里实现三种界面-->
         <!-- 将整体的 el-card 移入 v-for 循环内 -->
-        <div v-for="(talent, index) in talents" :key="index" class="talent-card-container">
-          <el-card class="recommendation-card">
-            <el-radio-group v-model="size" @change="handleSizeChange">
-              <!--            <el-radio label="medium">中等</el-radio>-->
-              <!--            <el-radio label="small">小型</el-radio>-->
-              <!--            <el-radio label="mini">超小</el-radio>-->
-              -->
-            </el-radio-group>
+        <div v-if="currentLayout === 'operation'">
+          <transition-group name="el-fade-in-linear">
+            <div
+              v-for="(talent, index) in talents"
+              :key="index"
+              class="talent-card-container"
+            >
+              <el-card class="recommendation-card">
+                <el-radio-group v-model="size" @change="handleSizeChange">
+                  <!--            <el-radio label="medium">中等</el-radio>-->
+                  <!--            <el-radio label="small">小型</el-radio>-->
+                  <!--            <el-radio label="mini">超小</el-radio>-->
+                  -->
+                </el-radio-group>
 
-            <el-descriptions :title="`${index + 1}. ${talent.username}`" :column="3" :size="size">
-              <el-descriptions-item :label="'手机号'">
-                {{ talent.phone }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="'居住地'">
-                {{ talent.location }}
-              </el-descriptions-item>
-              <el-descriptions-item :label="'职位标签'">
-                <el-tag type="danger">{{ talent.tag }}</el-tag>
-              </el-descriptions-item>
-              <template slot="extra">
-                <el-button type="primary" size="small">查看详情</el-button>
-              </template>
-            </el-descriptions>
-          </el-card>
+                <el-descriptions :title="`${index + 1}. ${talent.username}`" :column="3" :size="size">
+                  <el-descriptions-item :label="'手机号'">
+                    {{ talent.phone }}
+                  </el-descriptions-item>
+                  <el-descriptions-item :label="'居住地'">
+                    {{ talent.location }}
+                  </el-descriptions-item>
+                  <el-descriptions-item :label="'职位标签'">
+                    <el-tag type="danger">{{ talent.tag }}</el-tag>
+                  </el-descriptions-item>
+                  <template slot="extra">
+                    <el-button type="primary" size="small">查看详情</el-button>
+                  </template>
+                </el-descriptions>
+              </el-card>
+            </div>
+          </transition-group>
+        </div>
+        <div v-else-if="currentLayout === 'menu'">
+          <!-- 布局二的内容 -->
+          <!-- 略 -->
+        </div>
+        <div v-else-if="currentLayout === 'share'">
+          <!-- 布局三的内容 -->
+          <!-- 略 -->
         </div>
       </el-col>
     </el-row>
@@ -97,6 +113,7 @@ export default {
   data() {
     return {
       value: null,
+      currentLayout: 'operation', // 默认选中第一个布局
       size: '',
       talents: [
         {
@@ -150,6 +167,9 @@ export default {
     this.displayedTalents = this.filteredTalents
   },
   methods: {
+    changeLayout(layout) {
+      this.currentLayout = layout
+    },
     handleSizeChange(size) {
       this.size = size
     },
@@ -205,8 +225,6 @@ export default {
   margin-top: 20px; /* 调整分割线与按钮之间的距离 */
   margin-bottom: 20px; /* 调整分割线与下方内容之间的距离 */
 }
-
-
 
 .descriptions-extra-margin {
   margin-top: 16px;
