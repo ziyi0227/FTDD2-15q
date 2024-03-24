@@ -66,7 +66,7 @@ export default {
     PanelGroup,
     LineChart,
     PieChart,
-    BarChart
+    BarChart,
   },
   data() {
     return {
