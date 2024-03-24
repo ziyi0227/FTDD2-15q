@@ -37,7 +37,7 @@
 <script>
 import PanelGroup from '@/views/dashboard/components/PanelGroup'
 import LineChart from '@/views/dashboard/components/LineChart'
-import RaddarChart from '@/views/dashboard/components/RaddarChart'
+import RaddarChart from '@/views/recommend/components/RaddarChart'
 import PieChart from '@/views/dashboard/components/PieChart'
 import BarChart from '@/views/dashboard/components/BarChart'
 
@@ -65,7 +65,6 @@ export default {
   components: {
     PanelGroup,
     LineChart,
-    RaddarChart,
     PieChart,
     BarChart
   },
