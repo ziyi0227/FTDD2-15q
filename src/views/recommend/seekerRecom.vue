@@ -47,10 +47,7 @@
             >
               <el-card class="recommendation-card">
                 <el-radio-group v-model="size" @change="handleSizeChange">
-                  <!--            <el-radio label="medium">中等</el-radio>-->
-                  <!--            <el-radio label="small">小型</el-radio>-->
-                  <!--            <el-radio label="mini">超小</el-radio>-->
-                  -->
+
                 </el-radio-group>
 
                 <el-descriptions :title="`${index + 1}. ${talent.username}`" :column="3" :size="size">
@@ -73,10 +70,12 @@
         </div>
         <div v-else-if="currentLayout === 'menu'">
           <!-- 布局二的内容 -->
+          <bilibili />
           <!-- 略 -->
         </div>
         <div v-else-if="currentLayout === 'share'">
           <!-- 布局三的内容 -->
+          <knowsGroup />
           <!-- 略 -->
         </div>
       </el-col>
@@ -109,7 +108,13 @@
 </template>
 
 <script>
+import knowsGroup from '@/views/dashboard/components/knowsGroup.vue'
+import bilibili from '@/views/recommend/compnents/bilibili.vue'
 export default {
+  components: {
+    knowsGroup,
+    bilibili
+  },
   data() {
     return {
       value: null,
@@ -185,18 +190,6 @@ export default {
 }
 </script>
 
-<!--<style scoped>-->
-<!--.talent-recommendation {-->
-<!--  padding: 24px;-->
-<!--}-->
-
-<!--.talent-card-container {-->
-<!--  margin-bottom: 24px;-->
-<!--}-->
-<!--.recommendation-card {-->
-<!--// 如果需要的话，可以在这里给独立卡片添加特定样式-->
-<!--}-->
-<!--</style>-->
 <style scoped>
 .talent-recommendation {
   padding: 24px;

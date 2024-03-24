@@ -67,7 +67,7 @@ export default {
     LineChart,
     RaddarChart,
     PieChart,
-    BarChart
+    BarChart,
   },
   data() {
     return {
