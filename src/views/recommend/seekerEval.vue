@@ -77,7 +77,7 @@
             <RaddarChart></RaddarChart>
           </el-row>
           <el-row style="margin: 30px 0 0 20px">
-            <p>评语：</p>
+            <p>评语：{{evaltext.assess}}</p>
           </el-row>
         </el-col>
         <el-col :span="1" style="background-color: #ffffff; height: 555px">
@@ -95,6 +95,9 @@
             margin-left: 52px;"
             />
           </div>
+          <el-row style="margin: 30px 0 0 20px">
+            <p>{{evaltext.commend}}</p>
+          </el-row>
         </el-col>
       </el-row>
     </el-card>
@@ -128,6 +131,10 @@ export default {
         name: '王小虎',
         address: '上海市'
       }],
+      evaltext: {
+        assess: '',
+        commend: ''
+      },
       currentRow: null,
       selectedJob: null // 当前选择的职位详情信息
     }
