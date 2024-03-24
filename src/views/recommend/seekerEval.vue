@@ -73,9 +73,12 @@
             margin-top: -18px;
             margin-left: 52px;"
           />
-          <div>
-
-          </div>
+          <el-row style="margin-top: 30px">
+            <RaddarChart></RaddarChart>
+          </el-row>
+          <el-row style="margin: 30px 0 0 20px">
+            <p>评语：{{evaluation.eval}}</p>
+          </el-row>
         </el-col>
         <el-col :span="1" style="background-color: #ffffff; height: 555px">
 
@@ -106,7 +109,12 @@
 </template>
 
 <script>
+import RaddarChart from '@/views/recommend/components/RaddarChart'
+
 export default {
+  components: {
+    RaddarChart
+  },
   data() {
     return {
       drawer: false,
