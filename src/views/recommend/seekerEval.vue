@@ -77,7 +77,7 @@
             <RaddarChart></RaddarChart>
           </el-row>
           <el-row style="margin: 30px 0 0 20px">
-            <p>评语：{{evaluation.eval}}</p>
+            <p>评语：</p>
           </el-row>
         </el-col>
         <el-col :span="1" style="background-color: #ffffff; height: 555px">
