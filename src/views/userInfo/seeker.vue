@@ -31,18 +31,13 @@
               <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon">编辑</i>
             </el-upload>
-<!--            <div class="avatar-and-username" style="display: flex; align-items: center;">-->
-<!--              &lt;!&ndash; 输入框用于选择文件 &ndash;&gt;-->
-<!--              <input type="file" id="avatarInput" accept="image/*" @change="onFileSelected">-->
-<!--              <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">-->
-              <div style="margin-left: 10px; display: inline-block;">
-                <h2>{{ userInfo.username }}</h2>
-              </div>
-<!--            </div>-->
+            <div style="margin-left: 10px; display: inline-block;">
+              <h2>{{ userInfo.username }}</h2>
+            </div>
           </div>
         </el-card>
         <!--        -->
-        <el-card>
+        <el-card :data="actionList">
           <div>
             <el-row :gutter="20">
               <el-col :span="6">
@@ -51,18 +46,19 @@
                     <el-statistic
                       group-separator=","
                       :precision="2"
-                      :value="value2"
-                      :title="title2"
-                    ></el-statistic>
+                      :title="title1"
+                      :value="actionList.deliveredCount"
+                    >
+                    </el-statistic>
                   </div>
                 </el-card>
               </el-col>
               <el-col :span="6">
                 <el-card class="card-hover-feedback">
                   <div>
-                    <el-statistic title="被邀请面试">
+                    <el-statistic :title="title2">
                       <template slot="formatter">
-                        456/2
+                        {{ actionList.browsedCount }}
                       </template>
                     </el-statistic>
                   </div>
@@ -75,8 +71,8 @@
                       group-separator=","
                       :precision="2"
                       decimal-separator="."
-                      :value="value1"
-                      :title="title"
+                      :title="title3"
+                      :value="actionList.collectedCount"
                     >
                       <template slot="prefix">
                         <i class="el-icon-s-flag" style="color: red"></i>
@@ -91,13 +87,7 @@
               <el-col :span="6">
                 <el-card class="card-hover-feedback">
                   <div>
-                    <el-statistic :value="like ? 521 : 520" title="Feedback">
-                      <template slot="suffix">
-                <span @click="like = !like" class="like">
-                  <i class="el-icon-star-on" style="color:red" v-show="!!like"></i>
-                  <i class="el-icon-star-off" v-show="!like"></i>
-                </span>
-                      </template>
+                    <el-statistic title="hr有所意向" :value="actionList.satisfiedCount">
                     </el-statistic>
                   </div>
                 </el-card>
@@ -109,31 +99,10 @@
       <!--      -->
       <el-tab-pane label="收藏列表">
         <el-card class="customer-list">
-          <template #header>
-            <div class="header">
-              <span>收藏的招聘信息</span>
-            </div>
-          </template>
-          <el-table :data="pagedJobList" style="width: 100%">
-            <el-table-column prop="company" label="公司名"/>
-            <el-table-column prop="title" label="职位名称"/>
-            <el-table-column prop="phone" label="hr电话号码"/>
-            <el-table-column label="操作">
-              <template #default="{row}">
-                <el-button type="danger" size="small" @click="removeJob(row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-pagination
-            :current-page="currentPage"
-            :page-size="pageSize"
-            layout="prev, pager, next"
-            :total="jobList.length"
-            @current-change="handleCurrentChange"
-          />
+          <FavorList/>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="功能三">待开发</el-tab-pane>
+      <el-tab-pane label="投递列表">待开发</el-tab-pane>
       <el-tab-pane label="功能四">待开发</el-tab-pane>
     </el-tabs>
   </div>
@@ -141,58 +110,51 @@
 <script>
 import { Message } from 'element-ui'
 import isfollowid from 'core-js/internals/array-includes'
-import { getUserInfo, updateAvatar, updateUserInfo } from '@/api/user'
-import axios from 'axios' // 引入获取用户信息的接口
+import { getUserInfo, updateAvatar, updateUserInfo, getActionInfo } from '@/api/user'
+import FavorList from '@/views/userInfo/components/favorList.vue'
+// import axios from 'axios' // 引入获取用户信息的接口
 export default {
+  components: {
+    FavorList
+  },
   data() {
     return {
       nickname: '昵称',
       design: '设计',
       like: true,
-      value1: 4154.564,
-      value2: 1314,
-      title: '收藏职位数',
+      title1: '投递总数',
       title2: '简历被查看次数',
+      title3: '简历被收藏次数',
+      title4: 'hr有所意向',
       // imageUrl: '',
       tabPosition: 'left',
-      rules: {
-        username: [{ required: true, message: '用户名', trigger: 'blur' }, {
-          pattern: /^\S{1,10}$/,
-          message: '昵称必须是1-10位的非空字符串',
-          trigger: 'blur'
-        }],
-        live_city: [{ required: true, message: '现居地址', trigger: 'blur' }],
-        desire_industry: [{ required: true, message: '期望行业', trigger: 'blur' }],
-        cur_industry: [{ required: true, message: '最近工作行业', trigger: 'blur' }],
-        degree: [{ required: true, message: '学历', trigger: 'blur' }],
-        start_work_date: [{ required: true, message: '开始工作时间', trigger: 'blur' }]
-      },
       userInfo: {
         username: '',
         avatar: ''
       },
-      jobList: [
-        { company: '公司1', title: '职位1', phone: '1234567890' },
-        { company: '公司2', title: '职位2', phone: '0987654321' }
-      ],
-      pageSize: 5,
-      currentPage: 1
+      actionList: {
+        browsedCount: 0,
+        collectedCount: 0,
+        deliveredCount: 0,
+        satisfiedCount: 0
+      }
     }
   },
   computed: {
     isfollowid() {
       return isfollowid
-    },
-    pagedJobList() {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = start + this.pageSize
-      return this.jobList.slice(start, end)
     }
   },
   created() {
     this.getInfo()
+    this.getActionList()
   },
   methods: {
+    async getActionList() {
+      const result = await getActionInfo()
+      this.actionList = result.data
+      Message.success('获取用户行为信息成功')
+    },
     peopleAdd() {
       this.value2 += 1
     },
@@ -239,29 +201,8 @@ export default {
       }
       return isJPG && isLt2M
     },
-
-    async updateForm(formName) {
-      const form = this.$refs[formName]
-      const valid = true // 调用验证库的验证方法
-
-      if (valid) {
-        Message.success('修改成功')
-        // 调用接口修改用户信息（暂无）
-      } else {
-        Message.error('修改失败')
-      }
-    },
     handleCurrentChange(val) {
       this.currentPage = val
-    },
-    removeJob(row) {
-      const index = this.jobList.findIndex(item => item.id === row.id)
-      if (index !== -1) {
-        this.jobList.splice(index, 1)
-        Message.success('成功删除客户信息')
-      } else {
-        Message.error('删除失败')
-      }
     },
     async goBack() {
       this.$router.push('/dashboard')
@@ -352,12 +293,6 @@ export default {
     cursor: pointer;
   }
 }
-
-
-//.el-tabs__item {
-//  font-size: 16px !important; /* 设置标签字体大小 */
-//  height: 60px !important; /* 设置标签高度 */
-//}
 
 .el-tab-pane {
   font-size: 16px; /* 设置内容字体大小 */

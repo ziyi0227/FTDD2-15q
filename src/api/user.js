@@ -50,3 +50,10 @@ export function updateUserInfo(data) {
     data
   })
 }
+
+export function getActionInfo() {
+  return request({
+    url: '/users/actionInfo',
+    method: 'get'
+  })
+}
