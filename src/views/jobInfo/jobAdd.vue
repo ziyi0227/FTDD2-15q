@@ -251,7 +251,6 @@ export default {
         maxSalary: ''
       },
       jobform: {
-        jdNo: '',
         jdTitle: '',
         company: '',
         city: '',
