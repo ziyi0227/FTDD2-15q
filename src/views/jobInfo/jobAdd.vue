@@ -151,55 +151,6 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="职位标题">
-                <span>{{ props.row.jdTitle }}</span>
-              </el-form-item>
-              <el-form-item label="公司">
-                <span>{{ props.row.company }}</span>
-              </el-form-item>
-              <el-form-item label="城市">
-                <span>{{ props.row.city }}</span>
-              </el-form-item>
-              <el-form-item label="职位子类">
-                <span>{{ props.row.jdSubType }}</span>
-              </el-form-item>
-              <el-form-item label="需求人数">
-                <span>{{ props.row.requireNums }}</span>
-              </el-form-item>
-              <el-form-item label="月薪">
-                <template slot-scope="{ props }">
-                  <span>{{ props.row.minSalary }} ~ {{ props.row.maxSalary }}</span>
-                </template>
-              </el-form-item>
-              <el-form-item label="日期">
-                <template slot-scope="{ props }">
-                  <span>{{ props.row.startDate }} ~ {{ props.row.endDate }}</span>
-                </template>
-              </el-form-item>
-              <el-form-item label="是否要求出差">
-                <span>{{ props.row.isTravel }}</span>
-              </el-form-item>
-              <el-form-item label="工作经验年限">
-                <span>{{ props.row.minYears === -1 ? '不限' : props.row.minYears }}</span>
-              </el-form-item>
-              <el-form-item label="最低学历">
-                <span>{{ props.row.minEducation }}</span>
-              </el-form-item>
-              <el-form-item label="职位与专业技能">
-                <span>{{ props.row.titleSkill }}</span>
-              </el-form-item>
-              <el-form-item label="专业知识">
-                <span>{{ props.row.knowledge }}</span>
-              </el-form-item>
-              <el-form-item label="个人素养">
-                <span>{{ props.row.quality }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
         <el-table-column
           prop="jdTitle"
           label="职位标题"
@@ -357,8 +308,7 @@ export default {
     },
     getJobByUser() {
       jobApi.getJobByUser().then(response => {
-        this.jobList = response.data.rows
-        console.log(this.jobList)
+        this.jobList = response.data
       })
       // this.$message({
       //   message: '查询成功',
