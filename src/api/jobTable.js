@@ -31,9 +31,10 @@ export default {
     })
   },
   saveJobList(job) {
-    if (job.id == null && job.id === undefined){
+    if (job.id == null && job.id === undefined) {
       return this.addJobList(job)
     }
+    return this.updateJobList(job)
   },
   getJobByUser() {
     return request({

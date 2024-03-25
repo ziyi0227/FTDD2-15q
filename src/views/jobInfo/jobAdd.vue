@@ -82,6 +82,7 @@
                 v-model="jobform.isTravel"
                 active-color="#FF6A00"
                 inactive-color="#626262"
+                @change="handleIsTravelChange"
               />
             </el-form-item>
           </el-col>
@@ -129,7 +130,7 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="warning" @click="onSubmit">创建</el-button>
+          <el-button type="warning" @click="saveJobList()">创建</el-button>
           <el-button @click="onCancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -150,10 +151,6 @@
         stripe
         style="width: 100%"
       >
-        <el-table-column
-          type="selection"
-          width="55"
-        />
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
@@ -254,8 +251,24 @@ export default {
         maxSalary: ''
       },
       jobform: {
-        jobIdList: []
+        jdNo: '',
+        jdTitle: '',
+        company: '',
+        city: '',
+        jdSubType: '',
+        requireNums: '',
+        minSalary: '',
+        maxSalary: '',
+        startDate: '',
+        endDate: '',
+        isTravel: '',
+        minYears: '',
+        minEducation: '',
+        titleSkill: '',
+        knowledge: '',
+        quality: ''
       },
+      jobList: [],
       rules: {
         jdTitle: [
           { required: true, message: '请输入职位名称', trigger: 'blur' }
@@ -309,32 +322,25 @@ export default {
   created() {
     // 初始化省市区
     this.selectedOptions = [this.form.provinceCode, this.form.cityCode]
+    this.getJobByUser()
   },
   methods: {
-    onSubmit() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.$message({
-            message: 'Job added successfully',
-            type: 'success'
-          })
-        } else {
-          this.$message.error('Form validation failed')
-          return false
-        }
-      })
-    },
     onCancel() {
       this.$router.push('/jobInfo')
     },
     addressChange(arr) {
       var _this = this
-      console.log(arr)
-      console.log(CodeToText[arr[0]], CodeToText[arr[1]])
-      _this.form.provinceCode = arr[0]
-      _this.form.cityCode = arr[1]
+      _this.jobform.city = arr.join(',')
     },
     saveJobList() {
+      // 将日期转换为JavaScript日期对象
+      const startDate = new Date(this.jobform.startDate)
+      const endDate = new Date(this.jobform.endDate)
+
+      // 格式化日期为yyyyMMdd格式
+      this.jobform.startDate = this.formatDate(startDate)
+      this.jobform.endDate = this.formatDate(endDate)
+
       this.$refs.form.validate((valid) => {
         if (valid) {
           jobApi.saveJobList(this.jobform).then(response => {
@@ -349,6 +355,27 @@ export default {
         }
         this.getJobByUser()
       })
+    },
+    getJobByUser() {
+      jobApi.getJobByUser().then(response => {
+        this.jobList = response.data.rows
+        console.log(this.jobList)
+      })
+      // this.$message({
+      //   message: '查询成功',
+      //   type: 'success'
+      // })
+    },
+    formatDate(date) {
+      const year = date.getFullYear()
+      let month = (1 + date.getMonth()).toString()
+      month = month.length > 1 ? month : '0' + month
+      let day = date.getDate().toString()
+      day = day.length > 1 ? day : '0' + day
+      return year + month + day
+    },
+    handleIsTravelChange(value) {
+      this.jobform.isTravel = value ? 1 : 0
     }
   }
 }
