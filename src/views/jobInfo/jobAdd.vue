@@ -11,7 +11,7 @@
             margin-left: 58px;"
         />
       </el-row>
-      <el-form :model="jobform" :rules="rules" ref="form" label-width="100px">
+      <el-form ref="form" :model="jobform" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="16">
             <el-form-item label="职位标题" prop="jdTitle">
@@ -27,7 +27,13 @@
           </el-col>
           <el-col :span="7">
             <el-form-item label="城市" prop="city">
-              <el-input v-model="jobform.city" autocomplete="off" />
+              <el-cascader
+                v-model="jobform.city"
+                class="widthSmall"
+                size="large"
+                :options="options"
+                @change="addressChange"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -39,7 +45,7 @@
           </el-col>
           <el-col :span="7">
             <el-form-item label="需求人数" prop="requireNums">
-              <el-input-number v-model="jobform.requireNums" controls-position="right"></el-input-number>
+              <el-input-number v-model="jobform.requireNums" controls-position="right" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -59,13 +65,13 @@
         <el-row>
           <el-form-item label="日期" prop="dateRange">
             <el-col :span="6">
-              <el-date-picker v-model="jobform.startDate" placeholder="开始日期"/>
+              <el-date-picker v-model="jobform.startDate" placeholder="开始日期" />
             </el-col>
             <el-col :span="3" class="line">
               ~
             </el-col>
             <el-col :span="6">
-              <el-date-picker v-model="jobform.endDate" placeholder="结束日期"/>
+              <el-date-picker v-model="jobform.endDate" placeholder="结束日期" />
             </el-col>
           </el-form-item>
         </el-row>
@@ -75,12 +81,12 @@
               <el-switch
                 v-model="jobform.isTravel"
                 active-color="#FF6A00"
-                inactive-color="#626262">
-              </el-switch>
+                inactive-color="#626262"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="工作经验年限" prop="minYears">
+            <el-form-item label="工作经验" prop="minYears">
               <el-select v-model="jobform.minYears" placeholder="请选择">
                 <el-option label="不限" value="不限" />
                 <el-option label="一年到三年" value="一年到三年" />
@@ -129,37 +135,128 @@
       </el-form>
     </el-card>
     <el-card>
-      已经添加的，选择来修改
+      <el-row style="margin-bottom: 40px">
+        <h2 style="margin-left: 15px; margin-top: 15px">您已经添加的岗位</h2>
+        <div
+          style="background-color: #FF6A00;
+            height: 8px;
+            width: 18%;
+            margin-top: -18px;
+            margin-left: 58px;"
+        />
+      </el-row>
+      <el-table
+        :data="jobList"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="职位标题">
+                <span>{{ props.row.jdTitle }}</span>
+              </el-form-item>
+              <el-form-item label="公司">
+                <span>{{ props.row.company }}</span>
+              </el-form-item>
+              <el-form-item label="城市">
+                <span>{{ props.row.city }}</span>
+              </el-form-item>
+              <el-form-item label="职位子类">
+                <span>{{ props.row.jdSubType }}</span>
+              </el-form-item>
+              <el-form-item label="需求人数">
+                <span>{{ props.row.requireNums }}</span>
+              </el-form-item>
+              <el-form-item label="月薪">
+                <template slot-scope="{ props }">
+                  <span>{{ props.row.minSalary }} ~ {{ props.row.maxSalary }}</span>
+                </template>
+              </el-form-item>
+              <el-form-item label="日期">
+                <template slot-scope="{ props }">
+                  <span>{{ props.row.startDate }} ~ {{ props.row.endDate }}</span>
+                </template>
+              </el-form-item>
+              <el-form-item label="是否要求出差">
+                <span>{{ props.row.isTravel }}</span>
+              </el-form-item>
+              <el-form-item label="工作经验年限">
+                <span>{{ props.row.minYears === -1 ? '不限' : props.row.minYears }}</span>
+              </el-form-item>
+              <el-form-item label="最低学历">
+                <span>{{ props.row.minEducation }}</span>
+              </el-form-item>
+              <el-form-item label="职位与专业技能">
+                <span>{{ props.row.titleSkill }}</span>
+              </el-form-item>
+              <el-form-item label="专业知识">
+                <span>{{ props.row.knowledge }}</span>
+              </el-form-item>
+              <el-form-item label="个人素养">
+                <span>{{ props.row.quality }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="jdTitle"
+          label="职位标题"
+          width="180"
+        />
+        <el-table-column
+          prop="company"
+          label="公司"
+          width="180"
+        />
+        <el-table-column
+          prop="city"
+          label="城市"
+          width="180"
+        />
+        <el-table-column
+          label="月薪"
+        >
+          <template slot-scope="{ row }">
+            {{ row.minSalary }} ~ {{ row.maxSalary }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="160"
+        >
+          <template>
+            <el-button type="warning" round @click="setDeliver">修改</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
 
 <script>
+import { regionData, CodeToText } from 'element-china-area-data'
+import jobApi from '@/api/jobTable'
+
 export default {
   data() {
     return {
+      form: {},
+      options: regionData, // 省市区数据
+      selectedOptions: [], // 选中的地区
       salaryRange: {
         minSalary: '',
         maxSalary: ''
       },
       jobform: {
-        jdTitle: '', // 职位标题
-        company: '', // 公司
-        city: '', // 城市
-        jdSubType: '', // 职位子类
-        requireNums: null, // 需求人数
-        minSalary: '', // 最低月薪
-        maxSalary: '', // 最高月薪
-        startDate: '', // 开始日期
-        endDate: '', // 结束日期
-        isTravel: false, // 是否出差
-        minYears: '', // 工作经验年限
-        minEducation: '', // 最低学历
-        titleSkill: '', // 职位/专业技能
-        knowledge: '', // 专业知识
-        quality: '' // 个人素养
+        jobIdList: []
       },
-      roles: {
+      rules: {
         jdTitle: [
           { required: true, message: '请输入职位名称', trigger: 'blur' }
         ],
@@ -209,6 +306,10 @@ export default {
       }
     }
   },
+  created() {
+    // 初始化省市区
+    this.selectedOptions = [this.form.provinceCode, this.form.cityCode]
+  },
   methods: {
     onSubmit() {
       this.$refs.form.validate((valid) => {
@@ -225,6 +326,29 @@ export default {
     },
     onCancel() {
       this.$router.push('/jobInfo')
+    },
+    addressChange(arr) {
+      var _this = this
+      console.log(arr)
+      console.log(CodeToText[arr[0]], CodeToText[arr[1]])
+      _this.form.provinceCode = arr[0]
+      _this.form.cityCode = arr[1]
+    },
+    saveJobList() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          jobApi.saveJobList(this.jobform).then(response => {
+            this.$message({
+              message: 'Job added successfully',
+              type: 'success'
+            })
+          })
+        } else {
+          this.$message.error('Form validation failed')
+          return false
+        }
+        this.getJobByUser()
+      })
     }
   }
 }

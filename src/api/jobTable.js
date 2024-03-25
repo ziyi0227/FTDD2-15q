@@ -15,5 +15,30 @@ export default {
         maxSalary: ''
       }
     })
+  },
+  addJobList(job) {
+    return request({
+      url: '/job-table/add',
+      method: 'post',
+      data: job
+    })
+  },
+  updateJobList(job) {
+    return request({
+      url: '/job-table/update',
+      method: 'put',
+      data: job
+    })
+  },
+  saveJobList(job) {
+    if (job.id == null && job.id === undefined){
+      return this.addJobList(job)
+    }
+  },
+  getJobByUser() {
+    return request({
+      url: `/job-table/all`,
+      method: 'get'
+    })
   }
 }

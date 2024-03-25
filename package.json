@@ -24,6 +24,7 @@
     "core-js": "3.6.5",
     "echarts": "^5.5.0",
     "element": "^0.1.4",
+    "element-china-area-data": "^6.1.0",
     "element-ui": "^2.15.14",
     "font-awesome": "^4.7.0",
     "html2canvas": "^1.4.1",
