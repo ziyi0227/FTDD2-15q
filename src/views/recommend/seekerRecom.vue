@@ -32,6 +32,7 @@
         </el-card>
         <el-card class="dialog-card">
           与ai的交互地方
+          <chat/>
         </el-card>
       </el-col>
       <el-col span="17">
@@ -110,10 +111,12 @@
 <script>
 import knowsGroup from '@/views/dashboard/components/knowsGroup.vue'
 import bilibili from '@/views/recommend/compnents/bilibili.vue'
+import chat from '@/views/recommend/compnents/chat.vue'
 export default {
   components: {
     knowsGroup,
-    bilibili
+    bilibili,
+    chat
   },
   data() {
     return {
