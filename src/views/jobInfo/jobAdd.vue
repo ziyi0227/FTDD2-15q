@@ -179,7 +179,12 @@
           width="160"
         >
           <template>
-            <el-button type="warning" round @click="setDeliver">修改</el-button>
+            <el-col :span="12">
+              <el-button type="warning" size="small" @click="jobChange">编辑</el-button>
+            </el-col>
+            <el-col :span="12">
+              <el-button type="danger" size="small" @click="deleteJob">删除</el-button>
+            </el-col>
           </template>
         </el-table-column>
       </el-table>
@@ -325,6 +330,27 @@ export default {
     },
     handleIsTravelChange(value) {
       this.jobform.isTravel = value ? 1 : 0
+    },
+    jobChange(row) {
+      console.log('编辑的岗位数据：', row)
+      // 将当前编辑行的数据赋值给编辑表单的数据变量
+      this.editJobData = Object.assign({}, row)
+      // 手动赋值给表单数据
+      this.jobform.jdTitle = row.jdTitle
+      this.jobform.company = row.company
+      this.jobform.city = row.city
+      this.jobform.jdSubType = row.jdSubType
+      this.jobform.requireNums = row.requireNums
+      this.jobform.minSalary = row.minSalary
+      this.jobform.maxSalary = row.maxSalary
+      this.jobform.startDate = row.startDate
+      this.jobform.endDate = row.endDate
+      this.jobform.isTravel = row.isTravel
+      this.jobform.minYears = row.minYears
+      this.jobform.minEducation = row.minEducation
+      this.jobform.titleSkill = row.titleSkill
+      this.jobform.knowledge = row.knowledge
+      this.jobform.quality = row.quality
     }
   }
 }
