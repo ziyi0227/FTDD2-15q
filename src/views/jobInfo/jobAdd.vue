@@ -130,7 +130,7 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="warning" @click="saveJobList()">创建</el-button>
+          <el-button type="warning" @click="saveJobList()">确定</el-button>
           <el-button @click="onCancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -178,9 +178,9 @@
           label="操作"
           width="160"
         >
-          <template>
+          <template slot-scope="{ row }">
             <el-col :span="12">
-              <el-button type="warning" size="small" @click="jobChange">编辑</el-button>
+              <el-button type="warning" size="small" @click="jobChange(row)">编辑</el-button>
             </el-col>
             <el-col :span="12">
               <el-button type="danger" size="small" @click="deleteJob">删除</el-button>
@@ -311,6 +311,20 @@ export default {
         this.getJobByUser()
       })
     },
+    convertDate(dateString) {
+      // 将字符串解析为年、月、日
+      const year = dateString.substring(0, 4)
+      const month = dateString.substring(4, 6)
+      const day = dateString.substring(6, 8)
+
+      // 创建日期对象
+      const date = new Date(`${year}-${month}-${day}`)
+
+      // 将日期对象转换为ISO 8601格式
+      const isoString = date.toISOString()
+
+      return isoString
+    },
     getJobByUser() {
       jobApi.getJobByUser().then(response => {
         this.jobList = response.data
@@ -332,19 +346,27 @@ export default {
       this.jobform.isTravel = value ? 1 : 0
     },
     jobChange(row) {
-      console.log('编辑的岗位数据：', row)
       // 将当前编辑行的数据赋值给编辑表单的数据变量
       this.editJobData = Object.assign({}, row)
       // 手动赋值给表单数据
       this.jobform.jdTitle = row.jdTitle
       this.jobform.company = row.company
-      this.jobform.city = row.city
+      // 将逗号分隔的字符串转换为数组
+      const cityArray = row.city.split(',')
+      // 将转换后的数组赋值给 this.jobform.city
+      this.jobform.city = cityArray
       this.jobform.jdSubType = row.jdSubType
       this.jobform.requireNums = row.requireNums
       this.jobform.minSalary = row.minSalary
       this.jobform.maxSalary = row.maxSalary
-      this.jobform.startDate = row.startDate
-      this.jobform.endDate = row.endDate
+      const startDate = new Date(row.startDate.substring(0, 4),
+        parseInt(row.startDate.substring(4, 6)) - 1,
+        row.startDate.substring(6, 8))
+      const endDate = new Date(row.endDate.substring(0, 4),
+        parseInt(row.endDate.substring(4, 6)) - 1,
+        row.endDate.substring(6, 8))
+      this.jobform.startDate = startDate
+      this.jobform.endDate = endDate
       this.jobform.isTravel = row.isTravel
       this.jobform.minYears = row.minYears
       this.jobform.minEducation = row.minEducation
