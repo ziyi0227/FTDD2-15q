@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 export default {
-  deliver(jdNo) {
+  deliver(jobId) {
     return request({
-      url: `/job-table/deliver/${jdNo}`,
+      url: `/job-table/deliver/${jobId}`,
       method: 'post'
     })
       .then(response => response)

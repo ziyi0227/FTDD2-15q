@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 export default {
-  setFavor(jdNo) {
+  setFavor(jobId) {
     return request({
-      url: `/favor/${jdNo}`,
+      url: `/favor/${jobId}`,
       method: 'put'
     })
       .then(response => response)

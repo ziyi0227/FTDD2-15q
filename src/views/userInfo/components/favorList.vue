@@ -146,9 +146,9 @@ export default {
     },
     async setFavor(row) {
       // 假设您已经获取到jdNo
-      const jdNo = row.jdNo
+      const id = row.id
 
-      await favorApi.setFavor(jdNo)
+      await favorApi.setFavor(id)
         .then(data => {
           this.$message({
             message: data.message,
@@ -163,8 +163,8 @@ export default {
       this.getFavorList()
     },
     async setDeliver(row) {
-      const jdNo = row.jdNo
-      await actionApi.deliver(jdNo)
+      const id = row.id
+      await actionApi.deliver(id)
         .then(data => {
           this.$message({
             message: data.message,

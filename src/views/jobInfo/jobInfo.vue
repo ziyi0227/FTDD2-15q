@@ -102,7 +102,7 @@
               <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)" />
             </el-col>
             <el-col :span="16">
-              <el-button type="primary" round @click="setDeliver">投递</el-button>
+              <el-button type="primary" round @click="setDeliver(scope.row)">投递</el-button>
             </el-col>
           </template>
         </el-table-column>
@@ -180,9 +180,9 @@ export default {
     },
     setFavor(row) {
       // 假设您已经获取到jdNo
-      const jdNo = row.jdNo
+      const id = row.id
 
-      favorApi.setFavor(jdNo)
+      favorApi.setFavor(id)
         .then(data => {
           this.$message({
             message: data.message,
@@ -196,8 +196,8 @@ export default {
         })
     },
     setDeliver(row) {
-      const jdNo = row.jdNo
-      actionApi.deliver(jdNo)
+      const id = row.id
+      actionApi.deliver(id)
         .then(data => {
           this.$message({
             message: data.message,
