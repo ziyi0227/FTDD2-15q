@@ -24,5 +24,15 @@ export default {
       .catch(error => {
         throw error
       })
+  },
+  getFavorAll() {
+    return request({
+      url: `/favor/all`,
+      method: 'get'
+    })
+      .then(response => response)
+      .catch(error => {
+        throw error
+      })
   }
 }

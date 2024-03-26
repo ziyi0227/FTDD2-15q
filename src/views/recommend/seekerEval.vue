@@ -105,21 +105,18 @@
       title="问问AI"
       :visible.sync="drawer"
       :direction="direction"
-      :before-close="handleClose"
-    >
-<!--      <span>AI界面</span>-->
-      <chat />
+      :before-close="handleClose">
+      <span>AI界面</span>
     </el-drawer>
   </div>
 </template>
 
 <script>
 import RaddarChart from '@/views/recommend/components/RaddarChart'
-import chat from '@/views/recommend/compnents/chat.vue'
+
 export default {
   components: {
-    RaddarChart,
-    chat
+    RaddarChart
   },
   data() {
     return {

@@ -10,6 +10,10 @@
             <span>操作卡片</span>
           </div>
           <div class="recommendation-button">
+            <el-button type="danger" @click="toResume">我的简历</el-button>
+          </div>
+          <div class="divider" />
+          <div class="recommendation-button">
             <el-button type="danger" :loading="true" @click="handleRecommendation">开始推荐</el-button>
           </div>
           <div class="divider" />
@@ -188,6 +192,9 @@ export default {
     handlePageChange(pageNum) {
       this.currentPage = pageNum
       this.displayedTalents = this.filteredTalents.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize)
+    },
+    toResume() {
+      this.$router.push('/seekerInfo')
     }
   }
 }
