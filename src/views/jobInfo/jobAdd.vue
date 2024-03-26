@@ -32,7 +32,6 @@
                 class="widthSmall"
                 size="large"
                 :options="options"
-                @change="addressChange"
               />
             </el-form-item>
           </el-col>
@@ -207,6 +206,7 @@ export default {
         maxSalary: ''
       },
       jobform: {
+        id: '',
         jdTitle: '',
         company: '',
         city: '',
@@ -296,19 +296,21 @@ export default {
       this.jobform.startDate = this.formatDate(startDate)
       this.jobform.endDate = this.formatDate(endDate)
 
+      this.addressChange(this.jobform.city)
+
       this.$refs.form.validate((valid) => {
         if (valid) {
           jobApi.saveJobList(this.jobform).then(response => {
+            this.getJobByUser()
             this.$message({
-              message: 'Job added successfully',
+              message: '操作成功',
               type: 'success'
             })
           })
         } else {
-          this.$message.error('Form validation failed')
+          this.$message.error('输入错误')
           return false
         }
-        this.getJobByUser()
       })
     },
     convertDate(dateString) {
@@ -349,6 +351,7 @@ export default {
       // 将当前编辑行的数据赋值给编辑表单的数据变量
       this.editJobData = Object.assign({}, row)
       // 手动赋值给表单数据
+      this.jobform.id = row.id
       this.jobform.jdTitle = row.jdTitle
       this.jobform.company = row.company
       // 将逗号分隔的字符串转换为数组
