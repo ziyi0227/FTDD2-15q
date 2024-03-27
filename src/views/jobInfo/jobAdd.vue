@@ -81,7 +81,8 @@
                 v-model="jobform.isTravel"
                 active-color="#FF6A00"
                 inactive-color="#626262"
-                @change="handleIsTravelChange"
+                :active-value="1"
+                :inactive-value="0"
               />
             </el-form-item>
           </el-col>
@@ -216,7 +217,7 @@ export default {
         maxSalary: '',
         startDate: '',
         endDate: '',
-        isTravel: false,
+        isTravel: 0,
         minYears: '',
         minEducation: '',
         titleSkill: '',
@@ -349,9 +350,6 @@ export default {
       let day = date.getDate().toString()
       day = day.length > 1 ? day : '0' + day
       return year + month + day
-    },
-    handleIsTravelChange(value) {
-      this.jobform.isTravel = value ? true : false
     },
     jobChange(row) {
       // console.log('Start Date:', row.startDate);
