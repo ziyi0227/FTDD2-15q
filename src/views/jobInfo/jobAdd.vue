@@ -216,7 +216,7 @@ export default {
         maxSalary: '',
         startDate: '',
         endDate: '',
-        isTravel: '',
+        isTravel: false,
         minYears: '',
         minEducation: '',
         titleSkill: '',
@@ -278,6 +278,7 @@ export default {
     // 初始化省市区
     this.selectedOptions = [this.form.provinceCode, this.form.cityCode]
     this.getJobByUser()
+    this.jobform = {}
   },
   methods: {
     onCancel() {
@@ -298,6 +299,9 @@ export default {
 
       this.addressChange(this.jobform.city)
 
+      const isTravel = this.jobform.isTravel
+      this.jobform.isTravel = isTravel ? 1 : 0
+
       this.$refs.form.validate((valid) => {
         if (valid) {
           jobApi.saveJobList(this.jobform).then(response => {
@@ -306,6 +310,8 @@ export default {
               message: '操作成功',
               type: 'success'
             })
+            // 清空数据
+            this.jobform = {}
           })
         } else {
           this.$message.error('输入错误')
@@ -345,7 +351,7 @@ export default {
       return year + month + day
     },
     handleIsTravelChange(value) {
-      this.jobform.isTravel = value ? 1 : 0
+      this.jobform.isTravel = value ? true : false
     },
     jobChange(row) {
       // 将当前编辑行的数据赋值给编辑表单的数据变量
