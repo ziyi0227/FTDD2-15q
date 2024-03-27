@@ -354,34 +354,37 @@ export default {
       this.jobform.isTravel = value ? true : false
     },
     jobChange(row) {
+      // console.log('Start Date:', row.startDate);
+      // console.log('End Date:', row.endDate);
+// 手动格式化日期
+      const formatDateString = (dateString) => {
+        const year = dateString.substring(0, 4);
+        const month = dateString.substring(4, 6);
+        const day = dateString.substring(6, 8);
+        return `${year}-${month}-${day}`;
+      };
+
       // 将当前编辑行的数据赋值给编辑表单的数据变量
       this.editJobData = Object.assign({}, row)
       // 手动赋值给表单数据
-      this.jobform.id = row.id
-      this.jobform.jdTitle = row.jdTitle
-      this.jobform.company = row.company
-      // 将逗号分隔的字符串转换为数组
-      const cityArray = row.city.split(',')
-      // 将转换后的数组赋值给 this.jobform.city
-      this.jobform.city = cityArray
-      this.jobform.jdSubType = row.jdSubType
-      this.jobform.requireNums = row.requireNums
-      this.jobform.minSalary = row.minSalary
-      this.jobform.maxSalary = row.maxSalary
-      const startDate = new Date(row.startDate.substring(0, 4),
-        parseInt(row.startDate.substring(4, 6)) - 1,
-        row.startDate.substring(6, 8))
-      const endDate = new Date(row.endDate.substring(0, 4),
-        parseInt(row.endDate.substring(4, 6)) - 1,
-        row.endDate.substring(6, 8))
-      this.jobform.startDate = startDate
-      this.jobform.endDate = endDate
-      this.jobform.isTravel = row.isTravel
-      this.jobform.minYears = row.minYears
-      this.jobform.minEducation = row.minEducation
-      this.jobform.titleSkill = row.titleSkill
-      this.jobform.knowledge = row.knowledge
-      this.jobform.quality = row.quality
+      this.jobform = {
+        id: row.id,
+        jdTitle: row.jdTitle,
+        company: row.company,
+        city: row.city.split(','), // 将逗号分隔的字符串转换为数组
+        jdSubType: row.jdSubType,
+        requireNums: row.requireNums,
+        minSalary: row.minSalary,
+        maxSalary: row.maxSalary,
+        startDate: formatDateString(row.startDate), // 格式化日期
+        endDate: formatDateString(row.endDate), // 格式化日期
+        isTravel: row.isTravel,
+        minYears: row.minYears,
+        minEducation: row.minEducation,
+        titleSkill: row.titleSkill,
+        knowledge: row.knowledge,
+        quality: row.quality
+      }
     }
   }
 }
