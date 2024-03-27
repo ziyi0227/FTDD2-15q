@@ -1,8 +1,120 @@
+<!--<template>-->
+<!--  <div>-->
+<!--    <el-card>-->
+<!--      <el-table-->
+<!--        :data="ResumeList"-->
+<!--        stripe-->
+<!--        style="width: 100%"-->
+<!--      >-->
+<!--        <el-table-column-->
+<!--          type="selection"-->
+<!--          width="55"-->
+<!--        />-->
+<!--        <el-table-column type="expand">-->
+<!--          <template>-->
+<!--            <el-form label-position="left" inline class="demo-table-expand">-->
+<!--              <el-form-item label="求职者姓名">-->
+<!--                <span>{{ ResumeList.name }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="学位">-->
+<!--                <span>{{ ResumeList.degree }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="年龄">-->
+<!--                <span>{{ ResumeList.age }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="求职职位">-->
+<!--                <span>{{ ResumeList.desireJdType }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="当前任职职位">-->
+<!--                <span>{{ ResumeList.curJdType }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="期望工资">-->
+<!--                <template>-->
+<!--                  <span>{{ ResumeList.desireJdSalaryId }} </span>-->
+<!--                </template>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="开始工作时间">-->
+<!--                <template>-->
+<!--                  <span>{{ ResumeList.startWorkDate }}</span>-->
+<!--                </template>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="当前任职公司">-->
+<!--                <span>{{ ResumeList.curIndustry }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="现居地址">-->
+<!--                <span>{{ ResumeList.liveCity }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="联系方式">-->
+<!--                <span>{{ ResumeList.phone }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="经验/经历">-->
+<!--                <span>{{ ResumeList.experience }}</span>-->
+<!--              </el-form-item>-->
+<!--              &lt;!&ndash;              <el-form-item label="专业知识">&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>{{ ResumeList.knowledge }}</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--              &lt;!&ndash;              <el-form-item label="个人素养">&ndash;&gt;-->
+<!--              &lt;!&ndash;                <span>{{ ResumeList.quality }}</span>&ndash;&gt;-->
+<!--              &lt;!&ndash;              </el-form-item>&ndash;&gt;-->
+<!--            </el-form>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          prop="name"-->
+<!--          label="求职者姓名"-->
+<!--          width="180"-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          prop="degree"-->
+<!--          label="学位"-->
+<!--          width="180"-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          prop="age"-->
+<!--          label="年龄"-->
+<!--          width="180"-->
+<!--        />-->
+<!--        <el-table-column-->
+<!--          label="性别"-->
+<!--        >-->
+<!--          <template slot-scope="{ row }">-->
+<!--            {{ row.age }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          fixed="right"-->
+<!--          label="操作"-->
+<!--          width="160"-->
+<!--        >-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-col :span="8">-->
+<!--              <el-button type="warning" icon="el-icon-star-off" circle @click="setStatisfied(scope.row)" />-->
+<!--            </el-col>-->
+<!--            &lt;!&ndash;            <el-col :span="16">&ndash;&gt;-->
+<!--            &lt;!&ndash;              <el-button type="primary" round @click="setDeliver">投递</el-button>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </el-col>&ndash;&gt;-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+<!--    </el-card>-->
+<!--    &lt;!&ndash;  分页组件&ndash;&gt;-->
+<!--    <el-pagination-->
+<!--      :current-page="searchmodel.pageNo"-->
+<!--      :page-sizes="[10, 20, 30, 40]"-->
+<!--      :page-size="searchmodel.pageSize"-->
+<!--      layout="total, sizes, prev, pager, next, jumper"-->
+<!--      :total="total"-->
+<!--      @size-change="handleSizeChange"-->
+<!--      @current-change="handleCurrentChange"-->
+<!--    />-->
+<!--    <div/>-->
+<!--  </div>-->
+<!--</template>-->
 <template>
   <div>
     <el-card>
       <el-table
-        :data="jobList"
+        :data="ResumeList"
         stripe
         style="width: 100%"
       >
@@ -23,18 +135,18 @@
                 <span>{{ props.row.age }}</span>
               </el-form-item>
               <el-form-item label="求职职位">
-                <span>{{ props.row.desiredJdType }}</span>
+                <span>{{ props.row.desireJdType }}</span>
               </el-form-item>
               <el-form-item label="当前任职职位">
                 <span>{{ props.row.curJdType }}</span>
               </el-form-item>
               <el-form-item label="期望工资">
-                <template slot-scope="{ props }">
-                  <span>{{ props.row.desiredSalaryId }} </span>
+                <template>
+                  <span>{{ props.row.desireJdSalaryId }} </span>
                 </template>
               </el-form-item>
               <el-form-item label="开始工作时间">
-                <template slot-scope="{ props }">
+                <template>
                   <span>{{ props.row.startWorkDate }}</span>
                 </template>
               </el-form-item>
@@ -50,12 +162,6 @@
               <el-form-item label="经验/经历">
                 <span>{{ props.row.experience }}</span>
               </el-form-item>
-<!--              <el-form-item label="专业知识">-->
-<!--                <span>{{ props.row.knowledge }}</span>-->
-<!--              </el-form-item>-->
-<!--              <el-form-item label="个人素养">-->
-<!--                <span>{{ props.row.quality }}</span>-->
-<!--              </el-form-item>-->
             </el-form>
           </template>
         </el-table-column>
@@ -78,7 +184,7 @@
           label="性别"
         >
           <template slot-scope="{ row }">
-            {{ row.age }}
+            {{ row.sex }}
           </template>
         </el-table-column>
         <el-table-column
@@ -90,9 +196,6 @@
             <el-col :span="8">
               <el-button type="warning" icon="el-icon-star-off" circle @click="setStatisfied(scope.row)" />
             </el-col>
-<!--            <el-col :span="16">-->
-<!--              <el-button type="primary" round @click="setDeliver">投递</el-button>-->
-<!--            </el-col>-->
           </template>
         </el-table-column>
       </el-table>
@@ -107,9 +210,10 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <div/>
   </div>
 </template>
+
+
 <script>
 import actionApi from '@/api/action'
 import { getResumeList } from '@/api/user'
@@ -122,14 +226,31 @@ export default {
         pageNo: 1,
         pageSize: 10
       },
+      // ResumeList: {
+      //   sex: '',
+      //   name: '',
+      //   phone: '',
+      //   age: '',
+      //   liveCity: '',
+      //   degree: '',
+      //   desireJdType: '',
+      //   desireJdSalaryId: '',
+      //   desireJdIndustry: '',
+      //   desireCity: '',
+      //   experience: '',
+      //   currentSalaryId: '',
+      //   curIndustry: '',
+      //   curJdType: '',
+      //   startWorkDate: ''
+      // }
       ResumeList: []
     }
   },
   created() {
-    this.getFavorList()
+    this.getResumeList()
   },
   methods: {
-    async getFavorList() {
+    async getResumeList() {
       await getResumeList(this.searchmodel).then(response => {
         this.ResumeList = response.data.rows
         this.total = response.data.total

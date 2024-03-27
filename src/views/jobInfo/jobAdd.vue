@@ -15,14 +15,14 @@
         <el-row>
           <el-col :span="16">
             <el-form-item label="职位标题" prop="jdTitle">
-              <el-input v-model="jobform.jdTitle" autocomplete="off" />
+              <el-input v-model="jobform.jdTitle" autocomplete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="9">
             <el-form-item label="公司" prop="company">
-              <el-input v-model="jobform.company" autocomplete="off" />
+              <el-input v-model="jobform.company" autocomplete="off"/>
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -39,38 +39,38 @@
         <el-row>
           <el-col :span="9">
             <el-form-item label="职位子类" prop="jdSubType">
-              <el-input v-model="jobform.jdSubType" autocomplete="off" />
+              <el-input v-model="jobform.jdSubType" autocomplete="off"/>
             </el-form-item>
           </el-col>
           <el-col :span="7">
             <el-form-item label="需求人数" prop="requireNums">
-              <el-input-number v-model="jobform.requireNums" controls-position="right" />
+              <el-input-number v-model="jobform.requireNums" controls-position="right"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-form-item label="月薪" prop="salaryRange">
             <el-col :span="6">
-              <el-input v-model="jobform.minSalary" placeholder="最低月薪" autocomplete="off" />
+              <el-input v-model="jobform.minSalary" placeholder="最低月薪" autocomplete="off"/>
             </el-col>
             <el-col :span="3" class="line">
               ~
             </el-col>
             <el-col :span="6">
-              <el-input v-model="jobform.maxSalary" placeholder="最高月薪" autocomplete="off" />
+              <el-input v-model="jobform.maxSalary" placeholder="最高月薪" autocomplete="off"/>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="日期" prop="dateRange">
             <el-col :span="6">
-              <el-date-picker v-model="jobform.startDate" placeholder="开始日期" />
+              <el-date-picker v-model="jobform.startDate" placeholder="开始日期"/>
             </el-col>
             <el-col :span="3" class="line">
               ~
             </el-col>
             <el-col :span="6">
-              <el-date-picker v-model="jobform.endDate" placeholder="结束日期" />
+              <el-date-picker v-model="jobform.endDate" placeholder="结束日期"/>
             </el-col>
           </el-form-item>
         </el-row>
@@ -89,21 +89,21 @@
           <el-col :span="6">
             <el-form-item label="工作经验" prop="minYears">
               <el-select v-model="jobform.minYears" placeholder="请选择">
-                <el-option label="不限" value="不限" />
-                <el-option label="一年到三年" value="一年到三年" />
-                <el-option label="三年到五年" value="三年到五年" />
-                <el-option label="五年到十年" value="五年到十年" />
-                <el-option label="十年以上" value="十年以上" />
+                <el-option label="不限" value="不限"/>
+                <el-option label="一年到三年" value="一年到三年"/>
+                <el-option label="三年到五年" value="三年到五年"/>
+                <el-option label="五年到十年" value="五年到十年"/>
+                <el-option label="十年以上" value="十年以上"/>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="最低学历" prop="minEducation">
               <el-select v-model="jobform.minEducation" placeholder="请选择">
-                <el-option label="不限" value="不限" />
-                <el-option label="大专" value="大专" />
-                <el-option label="本科" value="本科" />
-                <el-option label="硕博" value="硕博" />
+                <el-option label="不限" value="不限"/>
+                <el-option label="大专" value="大专"/>
+                <el-option label="本科" value="本科"/>
+                <el-option label="硕博" value="硕博"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -111,21 +111,21 @@
         <el-row>
           <el-col :span="16">
             <el-form-item label="职位/专业技能" prop="titleSkill">
-              <el-input v-model="jobform.titleSkill" type="textarea" maxlength="120" show-word-limit />
+              <el-input v-model="jobform.titleSkill" type="textarea" maxlength="120" show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="16">
             <el-form-item label="专业知识" prop="knowledge">
-              <el-input v-model="jobform.knowledge" type="textarea" maxlength="120" show-word-limit />
+              <el-input v-model="jobform.knowledge" type="textarea" maxlength="120" show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="16">
             <el-form-item label="个人素养" prop="quality">
-              <el-input v-model="jobform.quality" type="textarea" maxlength="120" show-word-limit />
+              <el-input v-model="jobform.quality" type="textarea" maxlength="120" show-word-limit/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -354,13 +354,13 @@ export default {
     jobChange(row) {
       // console.log('Start Date:', row.startDate);
       // console.log('End Date:', row.endDate);
-// 手动格式化日期
+      // 手动格式化日期
       const formatDateString = (dateString) => {
-        const year = dateString.substring(0, 4);
-        const month = dateString.substring(4, 6);
-        const day = dateString.substring(6, 8);
-        return `${year}-${month}-${day}`;
-      };
+        const year = dateString.substring(0, 4)
+        const month = dateString.substring(4, 6)
+        const day = dateString.substring(6, 8)
+        return `${year}-${month}-${day}`
+      }
 
       // 将当前编辑行的数据赋值给编辑表单的数据变量
       this.editJobData = Object.assign({}, row)
@@ -389,23 +389,23 @@ export default {
 </script>
 
 <style>
-  .el-card {
-    margin: 10px 25px;
-  }
+.el-card {
+  margin: 10px 25px;
+}
 
-  .el-form-item {
-    margin-bottom: 20px;
-  }
+.el-form-item {
+  margin-bottom: 20px;
+}
 
-  .el-button {
-    margin-right: 10px;
-  }
+.el-button {
+  margin-right: 10px;
+}
 
-  .el-input {
-    width: 100%;
-  }
+.el-input {
+  width: 100%;
+}
 
-  .line{
-    text-align: center;
-  }
+.line {
+  text-align: center;
+}
 </style>
