@@ -41,5 +41,15 @@ export default {
       url: `/job-table/all`,
       method: 'get'
     })
+  },
+  getDeliverList(searchModel) {
+    return request({
+      url: '/job-table/deliver/list',
+      method: 'get',
+      params: {
+        pageNo: searchModel.pageNo,
+        pageSize: searchModel.pageSize
+      }
+    })
   }
 }

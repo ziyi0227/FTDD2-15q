@@ -57,3 +57,31 @@ export function getActionInfo() {
     method: 'get'
   })
 }
+
+export function getActionInfoHr() {
+  return request({
+    url: '/users/actionInfoHr',
+    method: 'get'
+  })
+}
+export function getResumeList(searchModel) {
+  return request({
+    url: '/users/resumeList',
+    method: 'get',
+    params: {
+      pageSize: searchModel.pageSize,
+      pageNo: searchModel.pageNo
+    }
+  })
+}
+export function getJobList(searchModel) {
+  return request({
+    url: '/users/jobList',
+    method: 'get',
+    params: {
+      pageSize: searchModel.pageSize,
+      pageNo: searchModel.pageNo
+    }
+  })
+}
+

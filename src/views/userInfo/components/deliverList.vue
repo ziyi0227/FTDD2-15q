@@ -88,7 +88,7 @@
         >
           <template slot-scope="scope">
             <el-col :span="8">
-              <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)"/>
+              <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)" />
             </el-col>
             <el-col :span="16">
               <el-button type="primary" round @click="setDeliver">投递</el-button>
@@ -113,34 +113,29 @@
 <script>
 import favorApi from '@/api/favor'
 import actionApi from '@/api/action'
-
+import jobTableApi from '@/api/jobTable'
 export default {
   data() {
     return {
       total: 0,
       searchmodel: {
         pageNo: 1,
-        pageSize: 10,
-        jobinput: '',
-        jobtype: '',
-        jdTitle: '',
-        company: '',
-        jdSubType: ''
+        pageSize: 10
       },
       jobList: []
     }
   },
   created() {
-    this.getFavorList()
+    this.DeliverList()
   },
   methods: {
-    async getFavorList() {
-      await favorApi.getFavorList(this.searchmodel).then(response => {
+    async DeliverList() {
+      await jobTableApi.getDeliverList(this.searchmodel).then(response => {
         this.jobList = response.data.rows
         this.total = response.data.total
       })
       this.$message({
-        message: '查询favor成功',
+        message: '查询delivered成功',
         type: 'success'
       })
     },
@@ -160,7 +155,7 @@ export default {
             message: '操作异常' + error
           })
         })
-      await this.getFavorList()
+      await this.DeliverList()
     },
     async setDeliver(row) {
       const id = row.id

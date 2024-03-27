@@ -86,12 +86,12 @@
           label="操作"
           width="160"
         >
-          <template slot-scope="scope">
-            <el-col :span="8">
-              <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)"/>
-            </el-col>
+          <template>
+<!--            <el-col :span="8">-->
+<!--              <el-button type="warning" icon="el-icon-star-off" circle @click="(scope.row)"/>-->
+<!--            </el-col>-->
             <el-col :span="16">
-              <el-button type="primary" round @click="setDeliver">投递</el-button>
+              <el-button type="primary" round @click="deleteJob()">删除</el-button>
             </el-col>
           </template>
         </el-table-column>
@@ -112,30 +112,24 @@
 </template>
 <script>
 import favorApi from '@/api/favor'
-import actionApi from '@/api/action'
-
+import { getJobList } from '@/api/user'
 export default {
   data() {
     return {
       total: 0,
       searchmodel: {
         pageNo: 1,
-        pageSize: 10,
-        jobinput: '',
-        jobtype: '',
-        jdTitle: '',
-        company: '',
-        jdSubType: ''
+        pageSize: 10
       },
       jobList: []
     }
   },
   created() {
-    this.getFavorList()
+    this.JobList()
   },
   methods: {
-    async getFavorList() {
-      await favorApi.getFavorList(this.searchmodel).then(response => {
+    async JobList() {
+      await getJobList(this.searchmodel).then(response => {
         this.jobList = response.data.rows
         this.total = response.data.total
       })
@@ -162,20 +156,8 @@ export default {
         })
       await this.getFavorList()
     },
-    async setDeliver(row) {
-      const id = row.id
-      await actionApi.deliver(id)
-        .then(data => {
-          this.$message({
-            message: data.message,
-            type: 'success'
-          })
-        })
-        .catch(error => {
-          this.$message.error({
-            message: '投递失败' + error
-          })
-        })
+    deleteJob() {
+
     },
     handleSizeChange() {
     },

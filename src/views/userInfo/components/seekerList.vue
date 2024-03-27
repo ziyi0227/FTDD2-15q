@@ -13,72 +13,72 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="职位标题">
-                <span>{{ props.row.jdTitle }}</span>
+              <el-form-item label="求职者姓名">
+                <span>{{ props.row.name }}</span>
               </el-form-item>
-              <el-form-item label="公司">
-                <span>{{ props.row.company }}</span>
+              <el-form-item label="学位">
+                <span>{{ props.row.degree }}</span>
               </el-form-item>
-              <el-form-item label="城市">
-                <span>{{ props.row.city }}</span>
+              <el-form-item label="年龄">
+                <span>{{ props.row.age }}</span>
               </el-form-item>
-              <el-form-item label="职位子类">
-                <span>{{ props.row.jdSubType }}</span>
+              <el-form-item label="求职职位">
+                <span>{{ props.row.desiredJdType }}</span>
               </el-form-item>
-              <el-form-item label="需求人数">
-                <span>{{ props.row.requireNums }}</span>
+              <el-form-item label="当前任职职位">
+                <span>{{ props.row.curJdType }}</span>
               </el-form-item>
-              <el-form-item label="月薪">
+              <el-form-item label="期望工资">
                 <template slot-scope="{ props }">
-                  <span>{{ props.row.minSalary }} ~ {{ props.row.maxSalary }}</span>
+                  <span>{{ props.row.desiredSalaryId }} </span>
                 </template>
               </el-form-item>
-              <el-form-item label="日期">
+              <el-form-item label="开始工作时间">
                 <template slot-scope="{ props }">
-                  <span>{{ props.row.startDate }} ~ {{ props.row.endDate }}</span>
+                  <span>{{ props.row.startWorkDate }}</span>
                 </template>
               </el-form-item>
-              <el-form-item label="是否要求出差">
-                <span>{{ props.row.isTravel }}</span>
+              <el-form-item label="当前任职公司">
+                <span>{{ props.row.curIndustry }}</span>
               </el-form-item>
-              <el-form-item label="工作经验年限">
-                <span>{{ props.row.minYears === -1 ? '不限' : props.row.minYears }}</span>
+              <el-form-item label="现居地址">
+                <span>{{ props.row.liveCity }}</span>
               </el-form-item>
-              <el-form-item label="最低学历">
-                <span>{{ props.row.minEducation }}</span>
+              <el-form-item label="联系方式">
+                <span>{{ props.row.phone }}</span>
               </el-form-item>
-              <el-form-item label="职位与专业技能">
-                <span>{{ props.row.titleSkill }}</span>
+              <el-form-item label="经验/经历">
+                <span>{{ props.row.experience }}</span>
               </el-form-item>
-              <el-form-item label="专业知识">
-                <span>{{ props.row.knowledge }}</span>
-              </el-form-item>
-              <el-form-item label="个人素养">
-                <span>{{ props.row.quality }}</span>
-              </el-form-item>
+<!--              <el-form-item label="专业知识">-->
+<!--                <span>{{ props.row.knowledge }}</span>-->
+<!--              </el-form-item>-->
+<!--              <el-form-item label="个人素养">-->
+<!--                <span>{{ props.row.quality }}</span>-->
+<!--              </el-form-item>-->
             </el-form>
           </template>
         </el-table-column>
         <el-table-column
-          prop="jdTitle"
-          label="职位标题"
+          prop="name"
+          label="求职者姓名"
           width="180"
         />
         <el-table-column
-          prop="company"
-          label="公司"
+          prop="degree"
+          label="学位"
           width="180"
         />
         <el-table-column
-          prop="city"
-          label="城市"
+          prop="age"
+          label="年龄"
           width="180"
         />
         <el-table-column
-          label="月薪"
+          label="性别"
         >
           <template slot-scope="{ row }">
-            {{ row.minSalary }} ~ {{ row.maxSalary }}
+            {{ row.age }}
           </template>
         </el-table-column>
         <el-table-column
@@ -88,11 +88,11 @@
         >
           <template slot-scope="scope">
             <el-col :span="8">
-              <el-button type="warning" icon="el-icon-star-off" circle @click="setFavor(scope.row)"/>
+              <el-button type="warning" icon="el-icon-star-off" circle @click="setStatisfied(scope.row)" />
             </el-col>
-            <el-col :span="16">
-              <el-button type="primary" round @click="setDeliver">投递</el-button>
-            </el-col>
+<!--            <el-col :span="16">-->
+<!--              <el-button type="primary" round @click="setDeliver">投递</el-button>-->
+<!--            </el-col>-->
           </template>
         </el-table-column>
       </el-table>
@@ -111,8 +111,8 @@
   </div>
 </template>
 <script>
-import favorApi from '@/api/favor'
 import actionApi from '@/api/action'
+import { getResumeList } from '@/api/user'
 
 export default {
   data() {
@@ -120,14 +120,9 @@ export default {
       total: 0,
       searchmodel: {
         pageNo: 1,
-        pageSize: 10,
-        jobinput: '',
-        jobtype: '',
-        jdTitle: '',
-        company: '',
-        jdSubType: ''
+        pageSize: 10
       },
-      jobList: []
+      ResumeList: []
     }
   },
   created() {
@@ -135,12 +130,12 @@ export default {
   },
   methods: {
     async getFavorList() {
-      await favorApi.getFavorList(this.searchmodel).then(response => {
-        this.jobList = response.data.rows
+      await getResumeList(this.searchmodel).then(response => {
+        this.ResumeList = response.data.rows
         this.total = response.data.total
       })
       this.$message({
-        message: '查询favor成功',
+        message: '查询Resume成功',
         type: 'success'
       })
     },
@@ -148,7 +143,7 @@ export default {
       // 假设您已经获取到jdNo
       const id = row.id
 
-      await favorApi.setFavor(id)
+      await actionApi.setStatisfied(id)
         .then(data => {
           this.$message({
             message: data.message,
@@ -162,21 +157,21 @@ export default {
         })
       await this.getFavorList()
     },
-    async setDeliver(row) {
-      const id = row.id
-      await actionApi.deliver(id)
-        .then(data => {
-          this.$message({
-            message: data.message,
-            type: 'success'
-          })
-        })
-        .catch(error => {
-          this.$message.error({
-            message: '投递失败' + error
-          })
-        })
-    },
+    // async setDeliver(row) {
+    //   const id = row.id
+    //   await actionApi.deliver(id)
+    //     .then(data => {
+    //       this.$message({
+    //         message: data.message,
+    //         type: 'success'
+    //       })
+    //     })
+    //     .catch(error => {
+    //       this.$message.error({
+    //         message: '投递失败' + error
+    //       })
+    //     })
+    // },
     handleSizeChange() {
     },
     handleCurrentChange() {

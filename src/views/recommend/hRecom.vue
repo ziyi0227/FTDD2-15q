@@ -274,7 +274,7 @@ export default {
         { label: '人事', value: '人事' },
         { label: '财务', value: '财务' },
         { label: '法务', value: '法务' },
-        { label: '行政', value: '行政' },
+        { label: '行政', value: '行政' }
 
       ],
       currentPage: 1, // 当前页数

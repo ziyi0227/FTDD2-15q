@@ -41,7 +41,7 @@
           <div>
             <el-row :gutter="20">
               <el-col :span="6">
-                <el-card class="card-hover-feedback" @click.native="peopleAdd">
+                <el-card class="card-hover-feedback">
                   <div>
                     <el-statistic
                       group-separator=","
@@ -99,11 +99,19 @@
       <!--      -->
       <el-tab-pane label="收藏列表">
         <el-card class="customer-list">
-          <FavorList/>
+          <FavorList />
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="投递列表">待开发</el-tab-pane>
-      <el-tab-pane label="功能四">待开发</el-tab-pane>
+      <el-tab-pane label="投递列表">
+        <el-card class="customer-list">
+          <deliver-list />
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="简历">
+        <el-card class="customer-list">
+          简历
+        </el-card>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -112,10 +120,12 @@ import { Message } from 'element-ui'
 import isfollowid from 'core-js/internals/array-includes'
 import { getUserInfo, updateAvatar, updateUserInfo, getActionInfo } from '@/api/user'
 import FavorList from '@/views/userInfo/components/favorList.vue'
+import deliverList from '@/views/userInfo/components/deliverList.vue'
 // import axios from 'axios' // 引入获取用户信息的接口
 export default {
   components: {
-    FavorList
+    FavorList,
+    deliverList
   },
   data() {
     return {
@@ -155,9 +165,7 @@ export default {
       this.actionList = result.data
       Message.success('获取用户行为信息成功')
     },
-    peopleAdd() {
-      this.value2 += 1
-    },
+
     // 新增处理文件选择事件的方法
     onFileSelected(file) {
       // const file = event.target.files[0]
