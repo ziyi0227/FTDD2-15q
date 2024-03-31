@@ -1,3 +1,4 @@
+
 <!--<template>-->
 <!--  <div :class="className" :style="{height:height,width:width}" />-->
 <!--</template>-->
@@ -57,7 +58,7 @@
 <!--          top: 10,-->
 <!--          left: '2%',-->
 <!--          right: '2%',-->
-<!--          bottom: '3%',-->
+<!--          bottom: '25%', // 调整为25%以便显示图例-->
 <!--          containLabel: true-->
 <!--        },-->
 <!--        xAxis: [{-->
@@ -73,22 +74,26 @@
 <!--            show: false-->
 <!--          }-->
 <!--        }],-->
+<!--        legend: {-->
+<!--          bottom: 0,-->
+<!--          data: ['计算机科学', '电子工程', '机械工程']-->
+<!--        },-->
 <!--        series: [{-->
-<!--          name: 'pageA',-->
+<!--          name: '计算机科学',-->
 <!--          type: 'bar',-->
 <!--          stack: 'vistors',-->
 <!--          barWidth: '60%',-->
 <!--          data: [79, 52, 200, 334, 390, 330, 220],-->
 <!--          animationDuration-->
 <!--        }, {-->
-<!--          name: 'pageB',-->
+<!--          name: '电子工程',-->
 <!--          type: 'bar',-->
 <!--          stack: 'vistors',-->
 <!--          barWidth: '60%',-->
 <!--          data: [80, 52, 200, 334, 390, 330, 220],-->
 <!--          animationDuration-->
 <!--        }, {-->
-<!--          name: 'pageC',-->
+<!--          name: '机械工程',-->
 <!--          type: 'bar',-->
 <!--          stack: 'vistors',-->
 <!--          barWidth: '60%',-->
@@ -101,15 +106,14 @@
 <!--}-->
 <!--</script>-->
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height: height, width: width}" />
 </template>
 
 <script>
 import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
-
-const animationDuration = 6000
+import statisticsApi from '@/api/statistics'
 
 export default {
   mixins: [resize],
@@ -135,6 +139,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.initChart()
+      this.fetchHotMajorData()
     })
   },
   beforeDestroy() {
@@ -147,24 +152,53 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
+    },
+    fetchHotMajorData() {
+      statisticsApi.getHotMajor()
+        .then(response => {
+          this.handleMajorData(response.data)
+        })
+        .catch(error => {
+          console.error('Failed to fetch hot major data:', error)
+        })
+    },
+    handleMajorData(data) {
+      const xAxisData = ['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday']
+      const seriesData = []
+
+      data.forEach(item => {
+        const seriesIndex = seriesData.findIndex(series => series.name === item.majorData.major)
+        if (seriesIndex !== -1) {
+          seriesData[seriesIndex].data.push(item.majorData.count)
+        } else {
+          seriesData.push({
+            name: item.majorData.major,
+            type: 'bar',
+            stack: 'vistors',
+            barWidth: '60%',
+            data: [item.majorData.count],
+            animationDuration: 2000
+          })
+        }
+      })
 
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          axisPointer: {
+            type: 'shadow'
           }
         },
         grid: {
           top: 10,
           left: '2%',
           right: '2%',
-          bottom: '25%', // 调整为25%以便显示图例
+          bottom: '25%',
           containLabel: true
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: xAxisData,
           axisTick: {
             alignWithLabel: true
           }
@@ -177,32 +211,12 @@ export default {
         }],
         legend: {
           bottom: 0,
-          data: ['计算机科学', '电子工程', '机械工程']
+          data: seriesData.map(series => series.name)
         },
-        series: [{
-          name: '计算机科学',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: '电子工程',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: '机械工程',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
+        series: seriesData
       })
     }
   }
 }
 </script>
+

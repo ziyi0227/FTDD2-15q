@@ -1,11 +1,11 @@
-<!--<template>-->
-<!--  <div :class="className" :style="{height:height,width:width}" />-->
-<!--</template>-->
-
+<template>
+  <div :class="className" :style="{height:height,width:width}" />
+</template>
 <!--<script>-->
 <!--import * as echarts from 'echarts'-->
 <!--require('echarts/theme/macarons') // echarts theme-->
 <!--import resize from './mixins/resize'-->
+<!--import statisticsApi from '@/api/statistics'-->
 
 <!--export default {-->
 <!--  mixins: [resize],-->
@@ -25,28 +25,21 @@
 <!--    autoResize: {-->
 <!--      type: Boolean,-->
 <!--      default: true-->
-<!--    },-->
-<!--    chartData: {-->
-<!--      type: Object,-->
-<!--      required: true-->
 <!--    }-->
 <!--  },-->
 <!--  data() {-->
 <!--    return {-->
-<!--      chart: null-->
-<!--    }-->
-<!--  },-->
-<!--  watch: {-->
-<!--    chartData: {-->
-<!--      deep: true,-->
-<!--      handler(val) {-->
-<!--        this.setOptions(val)-->
+<!--      chart: null,-->
+<!--      chartData: {-->
+<!--        jobTitles: [],-->
+<!--        jobData: []-->
 <!--      }-->
 <!--    }-->
 <!--  },-->
 <!--  mounted() {-->
 <!--    this.$nextTick(() => {-->
 <!--      this.initChart()-->
+<!--      this.fetchHotJobs()-->
 <!--    })-->
 <!--  },-->
 <!--  beforeDestroy() {-->
@@ -59,12 +52,22 @@
 <!--  methods: {-->
 <!--    initChart() {-->
 <!--      this.chart = echarts.init(this.$el, 'macarons')-->
-<!--      this.setOptions(this.chartData)-->
 <!--    },-->
-<!--    setOptions({ expectedData, actualData } = {}) {-->
+<!--    setOptions() {-->
+<!--      const { jobTitles, jobData } = this.chartData-->
+
+<!--      if (!jobData || jobData.length === 0) {-->
+<!--        console.error('No data to display')-->
+<!--        return-->
+<!--      }-->
+
+<!--      // 处理 x 轴数据，使用月份作为 x 轴数据-->
+<!--      const xData = jobData[0].map(item => item.month)-->
+
 <!--      this.chart.setOption({-->
 <!--        xAxis: {-->
-<!--          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],-->
+<!--          type: 'category',-->
+<!--          data: xData,-->
 <!--          boundaryGap: false,-->
 <!--          axisTick: {-->
 <!--            show: false-->
@@ -90,57 +93,56 @@
 <!--          }-->
 <!--        },-->
 <!--        legend: {-->
-<!--          data: ['expected', 'actual']-->
+<!--          data: jobTitles-->
 <!--        },-->
-<!--        series: [{-->
-<!--          name: 'expected', itemStyle: {-->
-<!--            normal: {-->
-<!--              color: '#FF005A',-->
-<!--              lineStyle: {-->
-<!--                color: '#FF005A',-->
-<!--                width: 2-->
-<!--              }-->
-<!--            }-->
-<!--          },-->
+<!--        series: jobData.map((data, index) => ({-->
+<!--          name: jobTitles[index],-->
 <!--          smooth: true,-->
 <!--          type: 'line',-->
-<!--          data: expectedData,-->
+<!--          data: data.map(item => item.count),-->
 <!--          animationDuration: 2800,-->
 <!--          animationEasing: 'cubicInOut'-->
-<!--        },-->
-<!--        {-->
-<!--          name: 'actual',-->
-<!--          smooth: true,-->
-<!--          type: 'line',-->
-<!--          itemStyle: {-->
-<!--            normal: {-->
-<!--              color: '#3888fa',-->
-<!--              lineStyle: {-->
-<!--                color: '#3888fa',-->
-<!--                width: 2-->
-<!--              },-->
-<!--              areaStyle: {-->
-<!--                color: '#f3f8ff'-->
-<!--              }-->
-<!--            }-->
-<!--          },-->
-<!--          data: actualData,-->
-<!--          animationDuration: 2800,-->
-<!--          animationEasing: 'quadraticOut'-->
-<!--        }]-->
+<!--        }))-->
 <!--      })-->
+<!--    },-->
+<!--    fetchHotJobs() {-->
+<!--      statisticsApi.getHotJobTitle()-->
+<!--        .then(response => {-->
+<!--          const jobTitles = response.data || []-->
+<!--          const promises = jobTitles.map(jobTitle => {-->
+<!--            return statisticsApi.getHotJobData({ jobTitle })-->
+<!--              .then(response => {-->
+<!--                const jobData = response.data || {}-->
+<!--                const monthData = Object.entries(jobData).map(([month, count]) => ({ month, count }))-->
+<!--                this.chartData.jobTitles.push(jobTitle)-->
+<!--                this.chartData.jobData.push(monthData)-->
+<!--              })-->
+<!--              .catch(error => {-->
+<!--                console.error(`Failed to fetch data for job title "${jobTitle}":`, error)-->
+<!--                this.chartData.jobTitles.push(jobTitle)-->
+<!--                this.chartData.jobData.push([])-->
+<!--              })-->
+<!--          })-->
+<!--          Promise.all(promises)-->
+<!--            .then(() => {-->
+<!--              this.setOptions()-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--              console.error('Failed to fetch chart data:', error)-->
+<!--            })-->
+<!--        })-->
+<!--        .catch(error => {-->
+<!--          console.error('Failed to fetch hot jobs:', error)-->
+<!--        })-->
 <!--    }-->
 <!--  }-->
 <!--}-->
 <!--</script>-->
-<template>
-  <div :class="className" :style="{height:height,width:width}" />
-</template>
-
 <script>
 import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
+import statisticsApi from '@/api/statistics'
 
 export default {
   mixins: [resize],
@@ -166,29 +168,15 @@ export default {
     return {
       chart: null,
       chartData: {
-        jobTitles: ['后端工程师', '前端工程师', '算法工程师', '架构师', '运维'],
-        jobData: [
-        // 数据起伏明显一些
-          [234, 132, 101, 345, 90, 345, 210],
-          [220, 355, 345, 765, 290, 330, 143],
-          [150, 232, 655, 154, 190, 330, 410],
-          [999, 332, 301, 334, 390, 330, 320],
-          [820, 932, 901, 934, 1290, 1330, 1320]
-        ]
-      }
-    }
-  },
-  watch: {
-    chartData: {
-      deep: true,
-      handler(val) {
-        this.setOptions(val)
+        jobTitles: [],
+        jobData: []
       }
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.initChart()
+      this.fetchHotJobs()
     })
   },
   beforeDestroy() {
@@ -201,13 +189,22 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
     },
-    setOptions({ jobTitles, jobData } = {}) {
+    setOptions() {
+      const { jobTitles, jobData } = this.chartData
+
+      if (!jobData || jobData.length === 0) {
+        console.error('No data to display')
+        return
+      }
+
+      // 处理 x 轴数据，使用月份作为 x 轴数据
+      const xData = jobData[0].map(item => item.month).sort((a, b) => parseInt(a) - parseInt(b)) // 对月份进行排序
+
       this.chart.setOption({
         xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: xData.map(month => month), // 在这里添加 '月' 字符串以确保月份显示
           boundaryGap: false,
           axisTick: {
             show: false
@@ -239,11 +236,41 @@ export default {
           name: jobTitles[index],
           smooth: true,
           type: 'line',
-          data: data,
+          data: data.map(item => item.count).reverse(), // 反转数据
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         }))
       })
+    },
+    fetchHotJobs() {
+      statisticsApi.getHotJobTitle()
+        .then(response => {
+          const jobTitles = response.data || []
+          const promises = jobTitles.map(jobTitle => {
+            return statisticsApi.getHotJobData({ jobTitle })
+              .then(response => {
+                const jobData = response.data || {}
+                const monthData = Object.entries(jobData).map(([month, count]) => ({ month, count }))
+                this.chartData.jobTitles.push(jobTitle)
+                this.chartData.jobData.push(monthData)
+              })
+              .catch(error => {
+                console.error(`Failed to fetch data for job title "${jobTitle}":`, error)
+                this.chartData.jobTitles.push(jobTitle)
+                this.chartData.jobData.push([])
+              })
+          })
+          Promise.all(promises)
+            .then(() => {
+              this.setOptions()
+            })
+            .catch(error => {
+              console.error('Failed to fetch chart data:', error)
+            })
+        })
+        .catch(error => {
+          console.error('Failed to fetch hot jobs:', error)
+        })
     }
   }
 }
