@@ -1,64 +1,115 @@
 <template>
   <el-col span="24">
     <el-row :gutter="10">
-      <el-col v-for="card in cardsData" :key="card.id" :span="8">
+      <el-col v-for="card in seekerList" :key="card.id" :span="8">
         <el-card shadow="hover" class="custom-card">
-          <img :src="card.imageUrl" class="image">
+          <img
+              src="https://sky-take-out-runa.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720220930232419.jpg"
+              class="image"
+          >
           <div style="padding: 10px; margin-bottom: 5px">
-            <h3>{{ card.companyName }}</h3>
+            <h3>{{ card.company }}</h3>
             <div class="bottom clearfix" style="margin-bottom: auto">
-              <time>{{ card.content }}</time>
-              <el-button type="text" class="button">查看详情</el-button>
+              <el-tag>{{ card.jd_sub_type }}</el-tag>
+              <el-button type="text" class="button" @click="showDetails(card)">查看详情</el-button>
             </div>
           </div>
         </el-card>
       </el-col>
     </el-row>
-  </el-col>
+    <el-dialog
+        :visible.sync=" detailVisible
+              "
+              width="1000px"
+              :before-close="handleCloseModal"
+              class="recommendation-dialog"
+              >
+              <el-card>
+                <el-row>
+                  <el-col :span="24">
+                    <div>
+                      <span>公司：</span>
+                      <span>{{ selectedTalent.company }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>招收职位：</span>
+                      <span>{{ selectedTalent.jd_title }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>最低学历要求：</span>
+                      <span>{{ selectedTalent.min_education }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>技能要求：</span>
+                      <span>{{ selectedTalent.knowledge }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>薪资：</span>
+                      <span>{{ selectedTalent.min_salary }} -- {{ selectedTalent.max_salary }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>工作经验要求：</span>
+                      <span>{{ selectedTalent.min_years }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>需求人数：</span>
+                      <span>{{ selectedTalent.require_nums }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>个人素养：</span>
+                      <span>{{ selectedTalent.title_skill }}</span>
+                    </div>
+                  </el-col>
+                  <el-col :span="24">
+                    <div>
+                      <span>品质：</span>
+                      <span>{{ selectedTalent.quality }}</span>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-card>
+              </el-dialog>
+      </el-col>
 </template>
 
 <script>
 export default {
+  // 接收父组件传过来的数据
+  props: {
+    seekerList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
-      cardsData: [
-        {
-          id: 1,
-          companyName: 'hdu集团',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '高薪资，双休'
-        },
-        {
-          id: 2,
-          companyName: '某某公司',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '五险一金，带薪年假'
-        },
-        {
-          id: 3,
-          companyName: '另一个公司',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '周末双休，加班补助'
-        },
-        {
-          id: 4,
-          companyName: '最后第三个公司',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '五险一金，带薪年假'
-        },
-        {
-          id: 5,
-          companyName: '最后第二个公司',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '周末双休，加班补助'
-        },
-        {
-          id: 6,
-          companyName: '最后一个公司',
-          imageUrl: 'https://th.bing.com/th?id=OSK.801b659affe83d0ab8702d3976d7a684&w=148&h=148&c=7&o=6&dpr=1.3&pid=SANGAM',
-          content: '五险一金，带薪年假'
-        }
-      ]
+      detailVisible: false,
+      selectedTalent: {},
+      cardsData: []
+    }
+  },
+  methods: {
+    showDetails(talent) {
+      this.selectedTalent = talent
+      this.detailVisible = true
+    },
+    handleCloseModal() {
+      this.selectedTalent = {}
+      this.detailVisible = false
     }
   }
 }

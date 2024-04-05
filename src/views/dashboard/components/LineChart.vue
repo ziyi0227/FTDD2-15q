@@ -168,7 +168,7 @@ export default {
     return {
       chart: null,
       chartData: {
-        jobTitles: [],
+        jd_sub_types: [],
         jobData: []
       }
     }
@@ -191,7 +191,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
     },
     setOptions() {
-      const { jobTitles, jobData } = this.chartData
+      const { jd_sub_types, jobData } = this.chartData
 
       if (!jobData || jobData.length === 0) {
         console.error('No data to display')
@@ -230,10 +230,10 @@ export default {
           }
         },
         legend: {
-          data: jobTitles
+          data: jd_sub_types
         },
         series: jobData.map((data, index) => ({
-          name: jobTitles[index],
+          name: jd_sub_types[index],
           smooth: true,
           type: 'line',
           data: data.map(item => item.count).reverse(), // 反转数据
@@ -245,18 +245,18 @@ export default {
     fetchHotJobs() {
       statisticsApi.getHotJobTitle()
         .then(response => {
-          const jobTitles = response.data || []
-          const promises = jobTitles.map(jobTitle => {
-            return statisticsApi.getHotJobData({ jobTitle })
+          const jd_sub_types = response.data || []
+          const promises = jd_sub_types.map(jd_sub_type => {
+            return statisticsApi.getHotJobData({ jd_sub_type })
               .then(response => {
                 const jobData = response.data || {}
                 const monthData = Object.entries(jobData).map(([month, count]) => ({ month, count }))
-                this.chartData.jobTitles.push(jobTitle)
+                this.chartData.jd_sub_types.push(jd_sub_type)
                 this.chartData.jobData.push(monthData)
               })
               .catch(error => {
-                console.error(`Failed to fetch data for job title "${jobTitle}":`, error)
-                this.chartData.jobTitles.push(jobTitle)
+                console.error(`Failed to fetch data for job title "${jd_sub_type}":`, error)
+                this.chartData.jd_sub_types.push(jd_sub_type)
                 this.chartData.jobData.push([])
               })
           })

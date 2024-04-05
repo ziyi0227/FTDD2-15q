@@ -109,7 +109,7 @@
       </el-tab-pane>
       <el-tab-pane label="简历">
         <el-card class="customer-list">
-          简历
+          <resume-list />
         </el-card>
       </el-tab-pane>
     </el-tabs>
@@ -121,11 +121,13 @@ import isfollowid from 'core-js/internals/array-includes'
 import { getUserInfo, updateAvatar, updateUserInfo, getActionInfo } from '@/api/user'
 import FavorList from '@/views/userInfo/components/favorList.vue'
 import deliverList from '@/views/userInfo/components/deliverList.vue'
+import resumeList from '@/views/userInfo/components/resumeList.vue'
 // import axios from 'axios' // 引入获取用户信息的接口
 export default {
   components: {
     FavorList,
-    deliverList
+    deliverList,
+    resumeList
   },
   data() {
     return {
