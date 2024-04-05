@@ -72,21 +72,21 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="现居住地" prop="live_city">
-              <el-input v-model="resume.live_city" autocomplete="off"/>
+              <el-input v-model="resume.live_city" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="学历" prop="degree">
-              <el-input v-model="resume.degree" autocomplete="off"/>
+              <el-input v-model="resume.degree" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="期望职类" prop="desire_jd_type">
-              <el-input v-model="resume.desire_jd_type" autocomplete="off"/>
+              <el-input v-model="resume.desire_jd_type" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,6 +185,15 @@ export default {
         // 校验规则可以根据实际情况进行定义
       }
     }
+  },
+  created() {
+    resumeApi.getMyResume().then(response => {
+      // 获取简历信息成功，更新表单数据
+      this.resume = response.data
+    }).catch(error => {
+      // 获取简历信息失败，处理异常情况
+      console.error('获取简历信息失败:', error)
+    })
   },
   methods: {
     onCancel() {

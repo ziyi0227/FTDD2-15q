@@ -15,6 +15,11 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import VueMarkdownEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
+
+VueMarkdownEditor.use(vuepressTheme)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,6 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+  .use(VueMarkdownEditor)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 

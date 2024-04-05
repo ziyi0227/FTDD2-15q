@@ -12,31 +12,31 @@
           <div class="recommendation-button">
             <el-button type="danger" @click="toResume">我的简历</el-button>
           </div>
-          <div class="divider"/>
+          <div class="divider" />
           <div class="recommendation-button">
             <el-button type="danger" :loading="isLoading" @click="handleRecommendation">开始推荐</el-button>
           </div>
-          <div class="divider"/>
+          <div class="divider" />
           <div class="layout-button">
             <span style="margin-right: 10px">布局：</span>
             <el-button-group>
-              <el-button type="danger" icon="el-icon-s-operation" @click="changeLayout('operation')"/>
-              <el-button type="danger" icon="el-icon-menu" @click="changeLayout('menu')"/>
-              <el-button type="danger" icon="el-icon-share" @click="changeLayout('share')"/>
+              <el-button type="danger" icon="el-icon-s-operation" @click="changeLayout('operation')" />
+              <el-button type="danger" icon="el-icon-menu" @click="changeLayout('menu')" />
+              <el-button type="danger" icon="el-icon-share" @click="changeLayout('share')" />
             </el-button-group>
           </div>
-          <div class="divider"/>
+          <div class="divider" />
           <div style="display: flex; align-items: center; margin-bottom: 5px">
             <span style="npmmargin-right: 0px">满意度：</span>
             <el-rate
-                v-model="value"
-                :colors="['#99A9BF', '#f77f2a', '#ff5900']"
+              v-model="value"
+              :colors="['#99A9BF', '#f77f2a', '#ff5900']"
             />
           </div>
         </el-card>
         <el-card class="dialog-card">
           与ai的交互地方
-          <chat/>
+          <chat />
         </el-card>
       </el-col>
       <el-col span="17">
@@ -44,13 +44,12 @@
         <div v-if="currentLayout === 'operation'">
           <transition-group name="el-fade-in-linear">
             <div
-                v-for="(talent, index) in talents"
-                :key="index"
-                class="talent-card-container"
+              v-for="(talent, index) in talents"
+              :key="index"
+              class="talent-card-container"
             >
               <el-card class="recommendation-card">
-                <el-radio-group v-model="size" @change="handleSizeChange">
-                </el-radio-group>
+                <el-radio-group v-model="size" @change="handleSizeChange" />
                 <el-descriptions :title="`${index + 1}. ${talent.company}`" :column="3" :size="size">
                   <el-descriptions-item :label="'城市'">
                     {{ talent.city }}
@@ -67,10 +66,10 @@
                 </el-descriptions>
               </el-card>
               <el-dialog
-                  :visible.sync="detailVisible"
-                  width="1000px"
-                  :before-close="handleCloseModal"
-                  class="recommendation-dialog"
+                :visible.sync="detailVisible"
+                width="1000px"
+                :before-close="handleCloseModal"
+                class="recommendation-dialog"
               >
                 <el-card>
                   <el-row>
@@ -136,12 +135,12 @@
         </div>
         <div v-else-if="currentLayout === 'menu'">
           <!-- 布局二的内容 -->
-          <bilibili :seeker-list="talents"/>
+          <bilibili :seeker-list="talents" />
           <!-- 略 -->
         </div>
         <div v-else-if="currentLayout === 'share'">
           <!-- 布局三的内容 -->
-          <knowsGroup/>
+          <knowsGroup />
           <!-- 略 -->
         </div>
       </el-col>
@@ -232,7 +231,6 @@ export default {
 </script>
 
 <style scoped>
-
 
 .talent-recommendation {
   padding: 24px;

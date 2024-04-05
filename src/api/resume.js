@@ -24,5 +24,11 @@ export default {
       url: '/resume/getResumeId',
       method: 'get'
     })
+  },
+  getMyResume() {
+    return request({
+      url: '/resume/getMyResume',
+      method: 'get'
+    })
   }
 }

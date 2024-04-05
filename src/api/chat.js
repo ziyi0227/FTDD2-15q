@@ -7,3 +7,16 @@ export function getChatContent(q) {
     params: q
   })
 }
+export function getSuggest() {
+  return request({
+    url: '/getSuggestion',
+    method: 'post'
+  })
+}
+export function getAssess(q) {
+  return request({
+    url: '/getAssess',
+    method: 'post',
+    params: q
+  })
+}
