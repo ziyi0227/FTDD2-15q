@@ -71,8 +71,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="现居住地" prop="live_city">
-              <el-input v-model="resume.live_city" autocomplete="off" />
+            <el-form-item label="现居住地" prop="liveCity">
+              <el-input v-model="resume.liveCity" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -85,29 +85,29 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="期望职类" prop="desire_jd_type">
-              <el-input v-model="resume.desire_jd_type" autocomplete="off" />
+            <el-form-item label="期望职类" prop="desireJdType">
+              <el-input v-model="resume.desireJdType" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="期望薪水" prop="desire_jd_salary_id">
-              <el-input v-model="resume.desire_jd_salary_id" autocomplete="off"/>
+            <el-form-item label="期望薪水" prop="desireJdSalaryId">
+              <el-input v-model="resume.desireJdSalaryId" autocomplete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="期望行业" prop="desire_jd_industry">
-              <el-input v-model="resume.desire_jd_industry" autocomplete="off"/>
+            <el-form-item label="期望行业" prop="desireJdIndustry">
+              <el-input v-model="resume.desireJdIndustry" autocomplete="off"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="期望工作城市" prop="desire_city">
-              <el-input v-model="resume.desire_city" autocomplete="off" />
+            <el-form-item label="期望工作城市" prop="desireCity">
+              <el-input v-model="resume.desireCity" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -121,28 +121,28 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="开始工作时间" prop="start_work_date">
-              <el-input v-model="resume.start_work_date" autocomplete="off" />
+              <el-input v-model="resume.startWorkDate" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="当前薪水" prop="current_salary_id">
-              <el-input v-model="resume.current_salary_id" autocomplete="off" />
+            <el-form-item label="当前薪水" prop="currentSalaryId">
+              <el-input v-model="resume.currentSalaryId" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="最近工作行业" prop="cur_industry">
-              <el-input v-model="resume.cur_industry" autocomplete="off" />
+            <el-form-item label="最近工作行业" prop="curIndustry">
+              <el-input v-model="resume.curIndustry" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="最近工作职类" prop="cur_jd_type">
-              <el-input v-model="resume.cur_jd_type" autocomplete="off" />
+            <el-form-item label="最近工作职类" prop="curJdType">
+              <el-input v-model="resume.curJdType" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
