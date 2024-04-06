@@ -118,7 +118,7 @@
 <script>
 import { Message } from 'element-ui'
 import isfollowid from 'core-js/internals/array-includes'
-import { getUserInfo, updateAvatar, updateUserInfo, getActionInfoHr } from '@/api/user'
+import { updateAvatar, updateUserInfo, getActionInfoHr } from '@/api/user'
 import jobList from '@/views/userInfo/components/JobList.vue'
 import seekerList from '@/views/userInfo/components/seekerList.vue'
 // import axios from 'axios' // 引入获取用户信息的接口
@@ -217,11 +217,11 @@ export default {
     async goBack() {
       this.$router.push('/dashboard')
     },
-    async getInfo() {
-      const res = await getUserInfo()
-      this.userInfo = res.data
-      Message.success('获取用户信息成功')
-    },
+    // async getInfo() {
+    //   // const res = await getUserInfo()
+    //   this.userInfo = res.data
+    //   Message.success('获取用户信息成功')
+    // },
     uploadSuccess(result) {
       if (result.success) {
         this.userInfo.avatar = result.data // 将返回的头像URL设置为用户信息中的头像地址
