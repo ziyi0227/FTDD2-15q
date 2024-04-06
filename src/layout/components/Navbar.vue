@@ -13,12 +13,12 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/seekerInfo">
+          <router-link v-if="type===1" to="/seekerInfo">
             <el-dropdown-item>
               个人主页
             </el-dropdown-item>
           </router-link>
-          <router-link to="/hrInfo">
+          <router-link v-if="type===2" to="/hrInfo">
             <el-dropdown-item>
               企业主页
             </el-dropdown-item>
@@ -39,8 +39,19 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { getUserInfo } from '@/api/user'
 
 export default {
+  data() {
+    return {
+      type: ''
+    }
+  },
+  created() {
+    getUserInfo().then(result => {
+      this.type = result.data.type
+    })
+  },
   components: {
     Breadcrumb,
     Hamburger
