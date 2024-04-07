@@ -1,7 +1,7 @@
 <template>
   <div class="job-container">
     <el-row gutter="16">
-      <el-col :span="12">
+      <el-col :span="14">
         <el-card class="job-card" shadow="hover">
           <div slot="header" class="clearfix">
             <span>已发布招聘</span>
