@@ -1,7 +1,7 @@
 <template>
   <div class="talent-recommendation">
-    <el-row gutter="20">
-      <el-col span="7">
+    <el-row gutter="12">
+      <el-col span="9">
         <!--<el-card class="user-card">-->
         <!--  user的信息-->
         <!--</el-card>-->
@@ -39,7 +39,7 @@
           <chat />
         </el-card>
       </el-col>
-      <el-col span="17">
+      <el-col span="15">
         <!-- 这里实现三种界面 -->
         <div v-if="currentLayout === 'operation'">
           <transition-group name="el-fade-in-linear">

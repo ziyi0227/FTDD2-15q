@@ -433,7 +433,6 @@ export default {
   },
   mounted() {
     this.renderChart()
-    alert('1234')
   },
   methods: {
     renderChart() {

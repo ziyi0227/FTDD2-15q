@@ -190,10 +190,16 @@ export default {
       })
     },
     saveResume() {
+      if (!this.resume.sex) {
+        this.resume.sex = '3' // 3 表示保密
+      }
       // 保存简历信息
       resumeApi.saveResume(this.resume).then(response => {
         // 保存成功，处理成功后的逻辑
-        console.log('保存成功:', response)
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
         this.$router.push('/resumeInfo')
       }).catch(error => {
         // 保存失败，处理失败后的逻辑

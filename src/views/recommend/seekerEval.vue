@@ -239,10 +239,8 @@ export default {
       this.selectedJob = currentRow
       const response = await getAssess({ q: JSON.stringify(currentRow) })
       this.evaltext.assess = response.data.output.text
-      alert('1234')
       const response2 = await getSuggest()
       this.evaltext.commend = response2.data.output.text
-      alert('1234')
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
