@@ -2,9 +2,9 @@
   <div class="talent-recommendation">
     <el-row gutter="20">
       <el-col span="7">
-        <el-card class="user-card">
-          user的信息
-        </el-card>
+        <!--<el-card class="user-card">-->
+        <!--  user的信息-->
+        <!--</el-card>-->
         <el-card class="option-card">
           <div slot="header" class="clearfix">
             <span>操作卡片</span>
@@ -35,7 +35,7 @@
           </div>
         </el-card>
         <el-card class="dialog-card">
-          与ai的交互地方
+          与ai的交互
           <chat />
         </el-card>
       </el-col>
@@ -216,7 +216,7 @@ export default {
       this.displayedTalents = this.filteredTalents.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize)
     },
     toResume() {
-      this.$router.push('/seekerInfo')
+      this.$router.push('/jobInfo/employGuide')
     },
     handleRecommendation() {
       this.myId = resumeApi.getResumeId()
@@ -325,8 +325,7 @@ export default {
   color: #fff;
 }
 
-<
-style scoped >
+<style scoped >
   /* 职位卡片容器美化 */
 .recommendation-card {
   background-color: #f8f8f8;

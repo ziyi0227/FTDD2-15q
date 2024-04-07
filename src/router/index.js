@@ -99,7 +99,7 @@ export const constantRoutes = [
         name: 'EmployGuide',
         hidden: true,
         component: () => import('@/views/jobInfo/employGuide'),
-        meta: { title: '招聘指南', icon: 'guide', userType: 1 }
+        meta: { title: '个人简历', icon: 'guide', userType: 1 }
       }
     ]
   },
