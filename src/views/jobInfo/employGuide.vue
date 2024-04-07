@@ -16,7 +16,7 @@
           <el-form ref="form" :model="resume" :rules="rules" label-width="100px">
             <el-row>
               <el-form-item label="专业" prop="major">
-                <el-input v-model="resume.major" autocomplete="off" />
+                <el-input v-model="resume.major" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
@@ -30,72 +30,72 @@
             </el-row>
             <el-row>
               <el-form-item label="姓名" prop="name">
-                <el-input v-model="resume.name" autocomplete="off" />
+                <el-input v-model="resume.name" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="电话" prop="phone">
-                <el-input v-model="resume.phone" autocomplete="off" />
+                <el-input v-model="resume.phone" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="年龄" prop="age">
-                <el-input v-model="resume.age" autocomplete="off" />
+                <el-input v-model="resume.age" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="现居住地" prop="liveCity">
-                <el-input v-model="resume.liveCity" autocomplete="off" />
+                <el-input v-model="resume.liveCity" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="学历" prop="degree">
-                <el-input v-model="resume.degree" autocomplete="off" />
+                <el-input v-model="resume.degree" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="期望职类" prop="desireJdType">
-                <el-input v-model="resume.desireJdType" autocomplete="off" />
+                <el-input v-model="resume.desireJdType" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="期望薪水" prop="desireJdSalaryId">
-                <el-input v-model="resume.desireJdSalaryId" autocomplete="off" />
+                <el-input v-model="resume.desireJdSalaryId" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="期望行业" prop="desireJdIndustry">
-                <el-input v-model="resume.desireJdIndustry" autocomplete="off" />
+                <el-input v-model="resume.desireJdIndustry" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="期望工作城市" prop="desireCity">
-                <el-input v-model="resume.desireCity" autocomplete="off" />
+                <el-input v-model="resume.desireCity" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="开始工作时间" prop="start_work_date">
-                <el-input v-model="resume.startWorkDate" autocomplete="off" />
+                <el-input v-model="resume.startWorkDate" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="当前薪水" prop="currentSalaryId">
-                <el-input v-model="resume.currentSalaryId" autocomplete="off" />
+                <el-input v-model="resume.currentSalaryId" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="最近工作行业" prop="curIndustry">
-                <el-input v-model="resume.curIndustry" autocomplete="off" />
+                <el-input v-model="resume.curIndustry" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="最近工作职类" prop="curJdType">
-                <el-input v-model="resume.curJdType" autocomplete="off" />
+                <el-input v-model="resume.curJdType" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="工作经验" prop="experience">
-                <el-input v-model="resume.experience" type="textarea" autocomplete="off" />
+                <el-input v-model="resume.experience" type="textarea" autocomplete="off"/>
               </el-form-item>
             </el-row>
             <el-form-item>
@@ -134,24 +134,24 @@ export default {
   data() {
     return {
       resume: {
-        major: '',
-        sex: '',
-        name: '',
-        phone: '',
-        age: '',
-        live_city: '',
-        degree: '',
-        desire_jd_type: '',
-        desire_jd_salary_id: '',
-        desire_jd_industry: '',
-        desire_city: '',
-        experience: '',
-        start_work_date: '',
-        current_salary_id: '',
-        cur_industry: '',
-        cur_jd_type: '',
-        resumeFile: '' // 上传的简历文件
-        // 其他字段根据实际需要继续补充
+        // major: '',
+        // sex: '',
+        // name: '',
+        // phone: '',
+        // age: '',
+        // live_city: '',
+        // degree: '',
+        // desire_jd_type: '',
+        // desire_jd_salary_id: '',
+        // desire_jd_industry: '',
+        // desire_city: '',
+        // experience: '',
+        // start_work_date: '',
+        // current_salary_id: '',
+        // cur_industry: '',
+        // cur_jd_type: '',
+        // resumeFile: '' // 上传的简历文件
+        // // 其他字段根据实际需要继续补充
       },
       rules: {
         // 校验规则可以根据实际情况进行定义
@@ -162,6 +162,9 @@ export default {
     resumeApi.getMyResume().then(response => {
       // 获取简历信息成功，更新表单数据
       this.resume = response.data
+      if (this.resume == null) {
+        this.resume = {}
+      }
     }).catch(error => {
       // 获取简历信息失败，处理异常情况
       console.error('获取简历信息失败:', error)
