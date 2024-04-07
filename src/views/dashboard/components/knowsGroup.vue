@@ -465,7 +465,7 @@ export default {
 
       const option = {
         title: {
-          text: '计算机相关知识图谱'
+          text: '知识图谱'
         },
         tooltip: {},
         legend: {

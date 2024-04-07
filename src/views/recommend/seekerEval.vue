@@ -198,7 +198,9 @@
       :direction="direction"
       :before-close="handleClose"
     >
-      <span>AI界面</span>
+      <span>
+        <chat/>
+      </span>
     </el-drawer>
   </div>
 </template>
@@ -207,11 +209,13 @@
 import RaddarChart from '@/views/recommend/components/RaddarChart'
 import favorApi from '@/api/favor'
 import { getAssess, getSuggest } from '@/api/chat'
+import chat from '@/views/recommend/compnents/chat'
 // import marked from 'marked'
 
 export default {
   components: {
-    RaddarChart
+    RaddarChart,
+    chat
   },
   data() {
     return {
