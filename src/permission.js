@@ -1,4 +1,3 @@
-
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
@@ -8,11 +7,11 @@ import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
 import Layout from '@/layout'
+import { getUserType } from '@/api/user'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
-
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
@@ -36,7 +35,6 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           await store.dispatch('user/getInfo')
-
           // 路由转换
           const myRoutes = myFilterAsyncRoutes(store.getters.menuList)
           // 404
@@ -51,7 +49,7 @@ router.beforeEach(async(to, from, next) => {
           global.myRoutes = myRoutes
 
           next({ ...to, replace: true }) // 防止刷新后页面空白
-
+          // next({ path: to.path })
           // next()
         } catch (error) {
           // remove token and go to login page to re-login
@@ -68,6 +66,7 @@ router.beforeEach(async(to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()
+      // next(`/login?redirect=${to.path}`)
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
@@ -80,6 +79,7 @@ router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
+
 function myFilterAsyncRoutes(menuList) {
   return menuList.filter(menu => {
     if (menu.component === 'Layout') {

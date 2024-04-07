@@ -1,35 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import { getUserType } from '@/api/user'
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
 
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
-
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
 export const constantRoutes = [
   {
     path: '/login',
@@ -65,60 +41,68 @@ export const constantRoutes = [
     }]
   },
 
-  // {
-  //   path: '/recommend',
-  //   component: Layout,
-  //   redirect: '/recommend/seekerRecom',
-  //   name: 'Recommend',
-  //   meta: { title: '推荐系统', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'seekerRecom',
-  //       name: 'SeekerRecom',
-  //       component: () => import('@/views/recommend/seekerRecom'),
-  //       meta: { title: '职位推荐', icon: 'deploymentunit' }
-  //     },
-  //     {
-  //       path: 'hRecom',
-  //       name: 'HRecom',
-  //       component: () => import('@/views/recommend/hRecom'),
-  //       meta: { title: '人才推荐', icon: 'reconciliation' }
-  //     },
-  //     {
-  //       path: 'seekerEval',
-  //       name: 'SeekerEval',
-  //       component: () => import('@/views/recommend/seekerEval'),
-  //       meta: { title: '能力评估', icon: 'contacts' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/jobInfo',
-  //   component: Layout,
-  //   redirect: '/jobInfo/jobInfo',
-  //   name: 'JobInfo',
-  //   meta: { title: '职位信息', icon: 'info-circle' },
-  //   children: [
-  //     {
-  //       path: 'jobInfo',
-  //       name: 'JobInfo',
-  //       component: () => import('@/views/jobInfo/jobInfo'),
-  //       meta: { title: '职位信息', icon: 'info-circle-fill' }
-  //     },
-  //     {
-  //       path: 'jobAdd',
-  //       name: 'JobAdd',
-  //       component: () => import('@/views/jobInfo/jobAdd'),
-  //       meta: { title: '添加职位', icon: 'addteam' }
-  //     },
-  //     {
-  //       path: 'employGuide',
-  //       name: 'EmployGuide',
-  //       component: () => import('@/views/jobInfo/employGuide'),
-  //       meta: { title: '招聘指南', icon: 'guide' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/recommend',
+    component: Layout,
+    redirect: '/recommend/seekerRecom',
+    name: 'Recommend',
+    hidden: true,
+    meta: { title: '推荐系统', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'seekerRecom',
+        name: 'SeekerRecom',
+        hidden: true,
+        component: () => import('@/views/recommend/seekerRecom'),
+        meta: { title: '职位推荐', icon: 'deploymentunit', userType: 1 }
+      },
+      {
+        path: 'hRecom',
+        name: 'HRecom',
+        hidden: true,
+        component: () => import('@/views/recommend/hRecom'),
+        meta: { title: '人才推荐', icon: 'reconciliation', userType: 2 }
+      },
+      {
+        path: 'seekerEval',
+        name: 'SeekerEval',
+        hidden: true,
+        component: () => import('@/views/recommend/seekerEval'),
+        meta: { title: '能力评估', icon: 'contacts', userType: 1 }
+      }
+    ]
+  },
+  {
+    path: '/jobInfo',
+    component: Layout,
+    redirect: '/jobInfo/jobInfo',
+    name: 'JobInfo',
+    hidden: true,
+    meta: { title: '职位信息', icon: 'info-circle' },
+    children: [
+      {
+        path: 'jobInfo',
+        name: 'JobInfo',
+        hidden: true,
+        component: () => import('@/views/jobInfo/jobInfo'),
+        meta: { title: '职位信息', icon: 'info-circle-fill', userType: 1 }
+      },
+      {
+        path: 'jobAdd',
+        name: 'JobAdd',
+        hidden: true,
+        component: () => import('@/views/jobInfo/jobAdd'),
+        meta: { title: '添加职位', icon: 'addteam', userType: 2 }
+      },
+      {
+        path: 'employGuide',
+        name: 'EmployGuide',
+        hidden: true,
+        component: () => import('@/views/jobInfo/employGuide'),
+        meta: { title: '招聘指南', icon: 'guide', userType: 1 }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -131,7 +115,16 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+// 导航守卫
+// router.beforeEach(async(to, from, next) => {
+//   const userType = await getUserType() // 获取用户类型
+//   if (to.meta && to.meta.userType && userType !== to.meta.userType) {
+//     // 如果访问的路由只能由特定用户类型访问，但当前用户类型不符合要求，则跳转到特定页面，比如 404 页面或者首页
+//     next('/') // 这里可以根据实际情况修改跳转的页面
+//   } else {
+//     next() // 否则允许访问
+//   }
+// })
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

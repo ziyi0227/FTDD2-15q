@@ -84,4 +84,10 @@ export function getJobList(searchModel) {
     }
   })
 }
+export function getUserType() {
+  return request({
+    url: '/users/userType',
+    method: 'get'
+  })
+}
 
