@@ -1,14 +1,14 @@
 
-<!--<template>-->
-<!--  <div :class="className" :style="{height:height,width:width}" />-->
-<!--</template>-->
+<template>
+  <div :class="className" :style="{height: height, width: width}"/>
+</template>
 
 <!--<script>-->
 <!--import * as echarts from 'echarts'-->
+
 <!--require('echarts/theme/macarons') // echarts theme-->
 <!--import resize from './mixins/resize'-->
-
-<!--const animationDuration = 6000-->
+<!--import statisticsApi from '@/api/statistics'-->
 
 <!--export default {-->
 <!--  mixins: [resize],-->
@@ -34,6 +34,7 @@
 <!--  mounted() {-->
 <!--    this.$nextTick(() => {-->
 <!--      this.initChart()-->
+<!--      this.fetchHotMajorData()-->
 <!--    })-->
 <!--  },-->
 <!--  beforeDestroy() {-->
@@ -46,24 +47,55 @@
 <!--  methods: {-->
 <!--    initChart() {-->
 <!--      this.chart = echarts.init(this.$el, 'macarons')-->
+<!--    },-->
+<!--    fetchHotMajorData() {-->
+<!--      // 获取当前时-->
+<!--      statisticsApi.getHotMajor()-->
+<!--        .then(response => {-->
+<!--          alert('12353')-->
+<!--          this.handleMajorData(response.data)-->
+<!--        })-->
+<!--        .catch(error => {-->
+<!--          console.error('Failed to fetch hot major data:', error)-->
+<!--        })-->
+<!--    },-->
+<!--    handleMajorData(data) {-->
+<!--      const xAxisData = ['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday']-->
+<!--      const seriesData = []-->
+
+<!--      data.forEach(item => {-->
+<!--        const seriesIndex = seriesData.findIndex(series => series.name === item.majorData.major)-->
+<!--        if (seriesIndex !== -1) {-->
+<!--          seriesData[seriesIndex].data.push(item.majorData.count)-->
+<!--        } else {-->
+<!--          seriesData.push({-->
+<!--            name: item.majorData.major,-->
+<!--            type: 'bar',-->
+<!--            stack: 'vistors',-->
+<!--            barWidth: '60%',-->
+<!--            data: [item.majorData.count],-->
+<!--            animationDuration: 2000-->
+<!--          })-->
+<!--        }-->
+<!--      })-->
 
 <!--      this.chart.setOption({-->
 <!--        tooltip: {-->
 <!--          trigger: 'axis',-->
-<!--          axisPointer: { // 坐标轴指示器，坐标轴触发有效-->
-<!--            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'-->
+<!--          axisPointer: {-->
+<!--            type: 'shadow'-->
 <!--          }-->
 <!--        },-->
 <!--        grid: {-->
 <!--          top: 10,-->
 <!--          left: '2%',-->
 <!--          right: '2%',-->
-<!--          bottom: '25%', // 调整为25%以便显示图例-->
+<!--          bottom: '25%',-->
 <!--          containLabel: true-->
 <!--        },-->
 <!--        xAxis: [{-->
 <!--          type: 'category',-->
-<!--          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],-->
+<!--          data: xAxisData,-->
 <!--          axisTick: {-->
 <!--            alignWithLabel: true-->
 <!--          }-->
@@ -76,38 +108,14 @@
 <!--        }],-->
 <!--        legend: {-->
 <!--          bottom: 0,-->
-<!--          data: ['计算机科学', '电子工程', '机械工程']-->
+<!--          data: seriesData.map(series => series.name)-->
 <!--        },-->
-<!--        series: [{-->
-<!--          name: '计算机科学',-->
-<!--          type: 'bar',-->
-<!--          stack: 'vistors',-->
-<!--          barWidth: '60%',-->
-<!--          data: [79, 52, 200, 334, 390, 330, 220],-->
-<!--          animationDuration-->
-<!--        }, {-->
-<!--          name: '电子工程',-->
-<!--          type: 'bar',-->
-<!--          stack: 'vistors',-->
-<!--          barWidth: '60%',-->
-<!--          data: [80, 52, 200, 334, 390, 330, 220],-->
-<!--          animationDuration-->
-<!--        }, {-->
-<!--          name: '机械工程',-->
-<!--          type: 'bar',-->
-<!--          stack: 'vistors',-->
-<!--          barWidth: '60%',-->
-<!--          data: [30, 52, 200, 334, 390, 330, 220],-->
-<!--          animationDuration-->
-<!--        }]-->
+<!--        series: seriesData-->
 <!--      })-->
 <!--    }-->
 <!--  }-->
 <!--}-->
 <!--</script>-->
-<template>
-  <div :class="className" :style="{height: height, width: width}" />
-</template>
 
 <script>
 import * as echarts from 'echarts'
@@ -133,7 +141,8 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      majorData: [] // Add a new data property to store the received major data
     }
   },
   mounted() {
@@ -154,8 +163,10 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
     },
     fetchHotMajorData() {
+      // 获取当前时
       statisticsApi.getHotMajor()
         .then(response => {
+          console.log('Response from API:', response.data)
           this.handleMajorData(response.data)
         })
         .catch(error => {
@@ -163,25 +174,34 @@ export default {
         })
     },
     handleMajorData(data) {
-      const xAxisData = ['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday']
+      const xAxisData = data.map(item => item.dayOfWeek)
       const seriesData = []
 
+      // 初始化专业数据
+      const majorDataMap = {}
       data.forEach(item => {
-        const seriesIndex = seriesData.findIndex(series => series.name === item.majorData.major)
-        if (seriesIndex !== -1) {
-          seriesData[seriesIndex].data.push(item.majorData.count)
-        } else {
-          seriesData.push({
-            name: item.majorData.major,
-            type: 'bar',
-            stack: 'vistors',
-            barWidth: '60%',
-            data: [item.majorData.count],
-            animationDuration: 2000
-          })
-        }
+        Object.entries(item.majorData).forEach(([major, { count }]) => {
+          if (!majorDataMap[major]) {
+            majorDataMap[major] = Array(xAxisData.length).fill(0)
+          }
+          const index = xAxisData.indexOf(item.dayOfWeek)
+          majorDataMap[major][index] = count
+        })
       })
 
+      // 转换为echarts需要的格式
+      Object.entries(majorDataMap).forEach(([major, counts]) => {
+        seriesData.push({
+          name: major,
+          type: 'bar',
+          stack: 'vistors',
+          barWidth: '60%',
+          data: counts,
+          animationDuration: 2000
+        })
+      })
+
+      // 更新图表数据
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -219,4 +239,3 @@ export default {
   }
 }
 </script>
-
