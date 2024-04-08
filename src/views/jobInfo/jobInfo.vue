@@ -210,9 +210,13 @@ export default {
           })
         })
     },
-    handleSizeChange() {
+    handleSizeChange(val) {
+      this.searchmodel.pageSize = val
+      this.getJobList()
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.searchmodel.pageNo = val
+      this.getJobList()
     }
   }
 }
