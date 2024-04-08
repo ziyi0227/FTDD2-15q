@@ -133,7 +133,7 @@ export default {
     handleCurrentChange(currentRow) {
       this.selectedJob = currentRow
       // alert(currentRow.orderedId)
-      this.getRecommendList(currentRow.orderedId)
+      this.getRecommendList(currentRow.id)
     },
     async getMyJob() {
       await jobApi.getJobByUser().then(res => {
