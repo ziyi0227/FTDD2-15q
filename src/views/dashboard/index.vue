@@ -2,8 +2,8 @@
   <el-container id="c1">
     <template>
       <el-carousel :interval="5000" arrow="always">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>{{ item }}</h3>
+        <el-carousel-item v-for="item in imageUrls" :key="item">
+          <img :src="item" style="width: 100%; height: 100%; object-fit: cover;" />
         </el-carousel-item>
       </el-carousel>
     </template>
@@ -30,7 +30,7 @@
       </el-col>
     </el-row>
 
-    <el-footer>Footer</el-footer>
+    <el-footer>才识雷达系统</el-footer>
   </el-container>
 </template>
 
@@ -69,7 +69,11 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      imageUrls: [
+        require('./images/1.png'),
+        require('./images/2.png')
+      ]
     }
   },
   methods: {
