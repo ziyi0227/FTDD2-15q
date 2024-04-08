@@ -50,15 +50,15 @@
             >
               <el-card class="recommendation-card">
                 <el-radio-group v-model="size" @change="handleSizeChange" />
-                <el-descriptions :title="`${index + 1}. ${talent.company}`" :column="3" :size="size">
+                <el-descriptions :title="`${index + 1}. ${talent.jdTitle}`" :column="3" :size="size">
                   <el-descriptions-item :label="'城市'">
                     {{ talent.city }}
                   </el-descriptions-item>
                   <el-descriptions-item :label="'职位'">
-                    {{ talent.jd_title }}
+                    {{ talent.jdTitle }}
                   </el-descriptions-item>
                   <el-descriptions-item :label="'职位标签'">
-                    <el-tag type="danger">{{ talent.jd_sub_type }}</el-tag>
+                    <el-tag type="danger">{{ talent.jdSubType }}</el-tag>
                   </el-descriptions-item>
                   <template slot="extra">
                     <el-button type="primary" size="small" @click="showDetails(talent)">查看详情</el-button>
@@ -82,13 +82,13 @@
                     <el-col :span="24">
                       <div>
                         <span>招收职位：</span>
-                        <span>{{ selectedTalent.jd_title }}</span>
+                        <span>{{ selectedTalent.jdTitle }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
                       <div>
                         <span>最低学历要求：</span>
-                        <span>{{ selectedTalent.min_education }}</span>
+                        <span>{{ selectedTalent.minEducation }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
@@ -100,25 +100,25 @@
                     <el-col :span="24">
                       <div>
                         <span>薪资：</span>
-                        <span>{{ selectedTalent.min_salary }} -- {{ selectedTalent.max_salary }}</span>
+                        <span>{{ selectedTalent.minSalary }} -- {{ selectedTalent.maxSalary }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
                       <div>
                         <span>工作经验要求：</span>
-                        <span>{{ selectedTalent.min_years }}</span>
+                        <span>{{ selectedTalent.minYears }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
                       <div>
                         <span>需求人数：</span>
-                        <span>{{ selectedTalent.require_nums }}</span>
+                        <span>{{ selectedTalent.requireNums }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
                       <div>
                         <span>个人素养：</span>
-                        <span>{{ selectedTalent.title_skill }}</span>
+                        <span>{{ selectedTalent.titleSkill }}</span>
                       </div>
                     </el-col>
                     <el-col :span="24">
