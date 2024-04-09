@@ -1,7 +1,7 @@
 <template>
   <div class="job-container">
-    <el-row gutter="16">
-      <el-col :span="14">
+    <el-row gutter="0">
+      <el-col :span="12">
         <el-card class="job-card" shadow="hover">
           <div slot="header" class="clearfix">
             <span>已发布招聘</span>
@@ -38,7 +38,7 @@
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="12">
         <el-card class="job-card" shadow="hover">
           <!--  根据左边的选择行显示详细信息-->
           <div v-if="recommendedList.length > 0">
@@ -49,15 +49,15 @@
               <el-card class="recommendation-card">
                 <el-radio-group v-model="size" @change="handleSizeChange">
                 </el-radio-group>
-                <el-descriptions :title="`${index + 1}. ${talent.name}`" :column="3" :size="size">
+                <el-descriptions :title="`${index + 1}. ${talent[0].name}`" :column="3" :size="size">
                   <el-descriptions-item :label="'姓名'">
                     {{ talent[0].name || '匿名' }}
                   </el-descriptions-item>
                   <el-descriptions-item :label="'职位'">
-                    {{ talent[0].cur_jd_type }}
+                    {{ talent[0].curJdType }}
                   </el-descriptions-item>
                   <el-descriptions-item :label="'求职职位'">
-                    <el-tag type="danger">{{ talent[0].desire_jd_type }}</el-tag>
+                    <el-tag type="danger">{{ talent[0].desireJdType }}</el-tag>
                   </el-descriptions-item>
                   <template slot="extra">
                     <el-button type="primary" size="small" @click="showDetails(talent)">查看详情</el-button>
@@ -84,14 +84,14 @@
                 </el-form-item>
                 <!-- 添加其它详细信息字段 -->
                 <el-form-item label="求职类型">
-                  <span>{{ selectedTalent[0].desire_jd_type }}</span>
+                  <span>{{ selectedTalent[0].desireJdType }}</span>
                 </el-form-item>
                 <el-form-item label="工作经验">
                   <span>{{ selectedTalent[0].experience }}</span>
                 </el-form-item>
                 <!-- 其他字段省略，根据需要添加... -->
                 <el-form-item label="现居住地">
-                  <span>{{ selectedTalent[0].live_city }}</span>
+                  <span>{{ selectedTalent[0].liveCity }}</span>
                 </el-form-item>
                 <!-- ... -->
               </el-form>
@@ -141,7 +141,7 @@ export default {
       })
     },
     getRecommendList(jobId) {
-      alert(jobId)
+      // alert(jobId)
       axios.get('http://127.0.0.1:5000/recommend-seeker', { params: { jobId }}).then(response => {
         // 处理响应数据
         this.recommendedList = response.data
@@ -200,7 +200,7 @@ export default {
 }
 
 .talent-detail-container {
-    padding: 24px;
+    padding: 0px;
     font-weight: bold;
     font-size: 20px;
     letter-spacing: 4px;
