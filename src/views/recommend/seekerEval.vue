@@ -117,30 +117,36 @@
           <h3 style="margin-left: 15px; margin-top: 15px">我能胜任这个职位吗？</h3>
           <div
             style="background-color: #FF6A00;
-        height: 8px;
-        width: 27%;
-        margin-top: -18px;
-        margin-left: 52px;"
+            height: 8px;
+            width: 27%;
+            margin-top: -18px;
+            margin-left: 52px;"
           />
-          <el-row style="margin-top: 30px">
+          <el-row style="margin-top: 30px; margin-bottom: 30px">
             <RaddarChart />
           </el-row>
-          <el-scroller style="height: 800px;">
-            <v-md-textarea-editor>评语：{{ evaltext.assess }}</v-md-textarea-editor>
-            <!--            <div v-html="renderMarkdown(evaltext.assess)"></div>-->
-          </el-scroller>
+          <div style="height: 200px;">
+            <el-row style="background-color: #f0f0f0;">
+              <el-scroller style="height: 800px;">
+                <v-md-textarea-editor>{{ evaltext.assess }}</v-md-textarea-editor>
+                <!--            <div v-html="renderMarkdown(evaltext.assess)"></div>-->
+              </el-scroller>
+            </el-row>
+          </div>
         </el-col>
-        <el-col :span="1" style="background-color: #ffffff;" />
+        <el-col :span="1" style="background-color: #ffffff;">
+          &nbsp;
+        </el-col>
         <el-col :span="9" style="background-color: #f0f0f0;">
           <div>
             <el-button style="float: right; padding: 3px 10px" type="text" @click="drawer = true">去问问AI>></el-button>
             <h3 style="margin-left: 15px; margin-top: 15px">我应该怎么做？</h3>
             <div
               style="background-color: #FF6A00;
-          height: 8px;
-          width: 27%;
-          margin-top: -18px;
-          margin-left: 52px;"
+              height: 8px;
+              width: 27%;
+              margin-top: -18px;
+              margin-left: 52px;"
             />
           </div>
           <!-- 使用带有滚动条的容器包裹评语内容 -->
@@ -210,7 +216,6 @@ import RaddarChart from '@/views/recommend/components/RaddarChart'
 import favorApi from '@/api/favor'
 import { getAssess, getSuggest } from '@/api/chat'
 import chat from '@/views/recommend/compnents/chat'
-// import marked from 'marked'
 
 export default {
   components: {
@@ -235,10 +240,6 @@ export default {
     this.getFavorAll()
   },
   methods: {
-    renderMarkdown(text) {
-      // 使用marked库将Markdown文本转换为HTML
-      return marked(text)
-    },
     async handleCurrentChange(currentRow) {
       this.selectedJob = currentRow
       const response = await getAssess({ q: JSON.stringify(currentRow) })
