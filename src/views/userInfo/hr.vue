@@ -107,7 +107,7 @@
           <seeker-list />
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="想不出来暂时">
+      <el-tab-pane label="其他">
         <el-card class="customer-list">
           鸽
         </el-card>
