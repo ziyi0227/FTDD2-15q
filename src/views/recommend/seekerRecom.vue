@@ -229,10 +229,10 @@ export default {
     async handleRecommendation() {
       await this.getResumeId()
 
-      alert(this.myId)
+      // alert(this.myId)
       const user_id = this.myId
-      alert(user_id)
-      alert('start')
+      // alert(user_id)
+      // alert('start')
       axios.get('http://127.0.0.1:5000/recommend-job', { params: { user_id }}).then(res => {
         this.talents = res.data
         // console.log(res)
