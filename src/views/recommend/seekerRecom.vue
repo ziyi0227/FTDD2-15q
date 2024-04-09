@@ -12,31 +12,31 @@
           <div class="recommendation-button">
             <el-button type="danger" @click="toResume">我的简历</el-button>
           </div>
-          <div class="divider" />
+          <div class="divider"/>
           <div class="recommendation-button">
             <el-button type="danger" :loading="isLoading" @click="handleRecommendation">开始推荐</el-button>
           </div>
-          <div class="divider" />
+          <div class="divider"/>
           <div class="layout-button">
             <span style="margin-right: 10px">布局：</span>
             <el-button-group>
-              <el-button type="danger" icon="el-icon-s-operation" @click="changeLayout('operation')" />
-              <el-button type="danger" icon="el-icon-menu" @click="changeLayout('menu')" />
-              <el-button type="danger" icon="el-icon-share" @click="changeLayout('share')" />
+              <el-button type="danger" icon="el-icon-s-operation" @click="changeLayout('operation')"/>
+              <el-button type="danger" icon="el-icon-menu" @click="changeLayout('menu')"/>
+              <el-button type="danger" icon="el-icon-share" @click="changeLayout('share')"/>
             </el-button-group>
           </div>
-          <div class="divider" />
+          <div class="divider"/>
           <div style="display: flex; align-items: center; margin-bottom: 5px">
             <span style="npmmargin-right: 0px">满意度：</span>
             <el-rate
-              v-model="value"
-              :colors="['#99A9BF', '#f77f2a', '#ff5900']"
+                v-model="value"
+                :colors="['#99A9BF', '#f77f2a', '#ff5900']"
             />
           </div>
         </el-card>
         <el-card class="dialog-card">
           与ai的交互
-          <chat />
+          <chat/>
         </el-card>
       </el-col>
       <el-col span="16">
@@ -44,12 +44,12 @@
         <div v-if="currentLayout === 'operation'">
           <transition-group name="el-fade-in-linear">
             <div
-              v-for="(talent, index) in talents"
-              :key="index"
-              class="talent-card-container"
+                v-for="(talent, index) in talents"
+                :key="index"
+                class="talent-card-container"
             >
               <el-card class="recommendation-card">
-                <el-radio-group v-model="size" @change="handleSizeChange" />
+                <el-radio-group v-model="size" @change="handleSizeChange"/>
                 <el-descriptions :title="`${index + 1}. ${talent.jdTitle}`" :column="3" :size="size">
                   <el-descriptions-item :label="'城市'">
                     {{ talent.city }}
@@ -66,10 +66,10 @@
                 </el-descriptions>
               </el-card>
               <el-dialog
-                :visible.sync="detailVisible"
-                width="1000px"
-                :before-close="handleCloseModal"
-                class="recommendation-dialog"
+                  :visible.sync="detailVisible"
+                  width="1000px"
+                  :before-close="handleCloseModal"
+                  class="recommendation-dialog"
               >
                 <el-card>
                   <el-row>
@@ -135,12 +135,12 @@
         </div>
         <div v-else-if="currentLayout === 'menu'">
           <!-- 布局二的内容 -->
-          <bilibili :seeker-list="talents" />
+          <bilibili :seeker-list="talents"/>
           <!-- 略 -->
         </div>
         <div v-else-if="currentLayout === 'share'">
           <!-- 布局三的内容 -->
-          <knowsGroup />
+          <knowsGroup/>
           <!-- 略 -->
         </div>
       </el-col>
@@ -154,6 +154,7 @@ import bilibili from '@/views/recommend/compnents/bilibili.vue'
 import chat from '@/views/recommend/compnents/chat.vue'
 import axios from 'axios'
 import resumeApi from '@/api/resume'
+import { error } from 'autoprefixer/lib/utils'
 
 export default {
   components: {
@@ -169,7 +170,7 @@ export default {
       size: '',
       isLoading: false,
       // jobIdList : [],
-      myId: '',
+      myId: 0,
       talents: [],
       selectedTalent: {},
       displayedTalents: [], // 当前展示的人才数据（根据搜索和分页筛选）
@@ -218,12 +219,26 @@ export default {
     toResume() {
       this.$router.push('/jobInfo/employGuide')
     },
-    handleRecommendation() {
-      this.myId = resumeApi.getResumeId()
-      axios.get('http://127.0.0.1:5000/recommend-job', { params: this.myId }).then(res => {
+    async getResumeId() {
+      await resumeApi.getMyResume().then(res => {
+        this.myId = res.data.id
+      }).catch(error => {
+        alert(error)
+      })
+    },
+    async handleRecommendation() {
+      await this.getResumeId()
+
+      alert(this.myId)
+      const user_id = this.myId
+      alert(user_id)
+      alert('start')
+      axios.get('http://127.0.0.1:5000/recommend-job', { params: { user_id }}).then(res => {
         this.talents = res.data
         // console.log(res)
         // alert(res)
+      }).catch(error => {
+        alert(error)
       })
     }
   }
@@ -325,7 +340,8 @@ export default {
   color: #fff;
 }
 
-<style scoped >
+<
+style scoped >
   /* 职位卡片容器美化 */
 .recommendation-card {
   background-color: #f8f8f8;
@@ -343,6 +359,7 @@ export default {
 .recommendation-card .el-tag {
   margin-right: 10px;
 }
+
 /* 修改每行字段间的垂直间距 */
 .recommendation-dialog .el-row {
   padding: 16px 0; /* 取消左右内边距，仅增加垂直内边距 */
