@@ -125,11 +125,11 @@
           <el-row style="margin-top: 30px; margin-bottom: 30px">
             <RaddarChart />
           </el-row>
-          <div style="height: 200px;">
+          <div style="height: 200px; margin-outside: 5px">
             <el-row style="background-color: #f0f0f0;">
-              <el-scroller style="height: 800px;">
-                <v-md-textarea-editor>{{ evaltext.assess }}</v-md-textarea-editor>
-                <!--            <div v-html="renderMarkdown(evaltext.assess)"></div>-->
+              <el-scroller style="height: 100px;">
+                <VueMarkdown :source="evaltext.assess">
+                </VueMarkdown>
               </el-scroller>
             </el-row>
           </div>
@@ -150,54 +150,13 @@
             />
           </div>
           <!-- 使用带有滚动条的容器包裹评语内容 -->
-          <el-scrollbar style="height: 600px;">
-            <v-md-textarea-editor>
-              {{ evaltext.commend }}
-            </v-md-textarea-editor>
-            <!--            <div v-html="renderMarkdown(evaltext.commend)"></div>-->
+          <el-scrollbar style="height: 600px; margin-outside: 3px">
+            <VueMarkdown :source="evaltext.commend">
+            </VueMarkdown>
           </el-scrollbar>
         </el-col>
       </el-row>
     </el-card>
-    <!--    <el-card class="eval-card">-->
-    <!--      <el-row gutter="0">-->
-    <!--        <el-col :span="14" style="background-color: #f0f0f0; height: 555px">-->
-    <!--          <h3 style="margin-left: 15px; margin-top: 15px">我能胜任这个职位吗？</h3>-->
-    <!--          <div-->
-    <!--            style="background-color: #FF6A00;-->
-    <!--            height: 8px;-->
-    <!--            width: 27%;-->
-    <!--            margin-top: -18px;-->
-    <!--            margin-left: 52px;"-->
-    <!--          />-->
-    <!--          <el-row style="margin-top: 30px">-->
-    <!--            <RaddarChart/>-->
-    <!--          </el-row>-->
-    <!--          <el-row style="margin: 30px 0 0 20px">-->
-    <!--            <v-md-textarea-editor>评语：{{ evaltext.assess }}</v-md-textarea-editor>-->
-    <!--          </el-row>-->
-    <!--        </el-col>-->
-    <!--        <el-col :span="1" style="background-color: #ffffff; height: 555px"/>-->
-    <!--        <el-col :span="9" style="background-color: #f0f0f0; height: 555px">-->
-    <!--          <div>-->
-    <!--            <el-button style="float: right; padding: 3px 10px" type="text" @click="drawer = true">去问问AI>></el-button>-->
-    <!--            <h3 style="margin-left: 15px; margin-top: 15px">我应该怎么做？</h3>-->
-    <!--            <div-->
-    <!--              style="background-color: #FF6A00;-->
-    <!--            height: 8px;-->
-    <!--            width: 27%;-->
-    <!--            margin-top: -18px;-->
-    <!--            margin-left: 52px;"-->
-    <!--            />-->
-    <!--          </div>-->
-    <!--          <el-row style="margin: 30px 0 0 20px">-->
-    <!--            <v-md-textarea-editor>-->
-    <!--              {{ evaltext.commend }}-->
-    <!--            </v-md-textarea-editor>-->
-    <!--          </el-row>-->
-    <!--        </el-col>-->
-    <!--      </el-row>-->
-    <!--    </el-card>-->
     <el-drawer
       title="问问AI"
       :visible.sync="drawer"
@@ -216,10 +175,12 @@ import RaddarChart from '@/views/recommend/components/RaddarChart'
 import favorApi from '@/api/favor'
 import { getAssess, getSuggest } from '@/api/chat'
 import chat from '@/views/recommend/compnents/chat'
+import VueMarkdown from 'vue-markdown'
 
 export default {
   components: {
     RaddarChart,
+    VueMarkdown,
     chat
   },
   data() {
