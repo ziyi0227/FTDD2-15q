@@ -58,10 +58,10 @@ export default {
 
 <style>
 .chat-container {
-  height: 300px; /* 设置聊天容器的高度 */
+  height: 500px; /* 设置聊天容器的高度 */
   overflow-y: auto; /* 如果内容过多，显示滚动条 */
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 5px;
 }
 
 .message {
