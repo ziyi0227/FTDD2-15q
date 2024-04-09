@@ -9,7 +9,9 @@
         <div v-else class="ai-avatar">
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
         </div>
-        <p>{{ message.text }}</p>
+        <p>
+          <VueMarkdown :source="message.text" />
+        </p>
       </div>
     </div>
     <div class="input-container">
@@ -21,8 +23,12 @@
 
 <script>
 import { getChatContent } from '@/api/chat.js' // 根据你的实际路径导入请求方法
+import VueMarkdown from 'vue-markdown'
 
 export default {
+  components: {
+    VueMarkdown
+  },
   data() {
     return {
       inputMessage: '',
@@ -59,8 +65,8 @@ export default {
 }
 
 .message {
-  margin-bottom: 10px;
-  padding: 5px;
+  margin-bottom: 0px;
+  padding: 0px;
   display: flex;
 }
 
