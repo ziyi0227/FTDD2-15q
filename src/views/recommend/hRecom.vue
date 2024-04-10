@@ -49,9 +49,9 @@
               <el-card class="recommendation-card">
                 <el-radio-group v-model="size" @change="handleSizeChange">
                 </el-radio-group>
-                <el-descriptions :title="`${index + 1}. ${talent[0].name}`" :column="3" :size="size">
+                <el-descriptions :title="`${index + 1}. ${obscureName(talent[0].name)}`" :column="3" :size="size">
                   <el-descriptions-item :label="'姓名'">
-                    {{ talent[0].name || '匿名' }}
+                    {{ obscureName(talent[0].name) || '匿名' }}
                   </el-descriptions-item>
                   <el-descriptions-item :label="'职位'">
                     {{ talent[0].curJdType }}
@@ -74,7 +74,7 @@
             <div v-if="selectedTalent">
               <el-form label-width="100px">
                 <el-form-item label="姓名">
-                  <span>{{ selectedTalent[0].name || '匿名' }}</span>
+                  <span>{{ obscureName(selectedTalent[0].name) || '匿名' }}</span>
                 </el-form-item>
                 <el-form-item label="性别">
                   <span>{{ selectedTalent[0].sex || '隐私' }}</span>
@@ -130,6 +130,19 @@ export default {
     this.getMyJob()
   },
   methods: {
+    obscureName(fullName) {
+      if (fullName) {
+        if (fullName.length > 2) {
+          return `${fullName.substring(0, 1)}*${fullName.substring(2)}`
+        } else if (fullName.length === 2) {
+          return `${fullName.substring(0, 1)}*`
+        } else {
+          return fullName
+        }
+      } else {
+        return '匿名'
+      }
+    },
     handleCurrentChange(currentRow) {
       this.selectedJob = currentRow
       // alert(currentRow.orderedId)
